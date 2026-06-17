@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Light, the Darkness & the Fate — A Destiny 2 Catch-Up</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#06070c; --void-2:#0a0c14; --surface:#0e111a; --surface-2:#141926;
+    --border:rgba(150,170,210,.14); --border-strong:rgba(150,170,210,.30);
+    --text:#dbe0ea; --text-dim:#8b94a8; --text-faint:#5b6478;
+    --light:#ecca6e; --solar:#f4853c; --arc:#6fb9f1; --void-p:#b67ee8;
+    --stasis:#5fc9e7; --strand:#54d792; --bone:#cfc9b6; --darkmatter:#9b7bf0;
+    --mars:#e0915a; --hive:#b9c46b; --prism:#cfa8ff;
+    --accent:var(--light); --maxw:1120px; --col:760px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--void);color:var(--text);
+    font-family:"Barlow",system-ui,sans-serif;font-size:18px;line-height:1.72;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;}
+
+  /* progress bar */
+  .progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:50;
+    background:linear-gradient(90deg,var(--solar),var(--light));box-shadow:0 0 12px var(--light);}
+
+  /* ambience */
+  .stars{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,.7), transparent),
+      radial-gradient(1px 1px at 70% 65%, rgba(255,255,255,.5), transparent),
+      radial-gradient(1px 1px at 45% 80%, rgba(255,255,255,.45), transparent),
+      radial-gradient(1.5px 1.5px at 85% 20%, rgba(220,235,255,.6), transparent),
+      radial-gradient(1px 1px at 12% 70%, rgba(255,255,255,.4), transparent),
+      radial-gradient(1px 1px at 60% 12%, rgba(255,255,255,.55), transparent),
+      radial-gradient(1px 1px at 33% 50%, rgba(255,255,255,.35), transparent);
+    background-repeat:repeat;
+    background-size:520px 520px,420px 420px,600px 600px,500px 500px,380px 380px,560px 560px,440px 440px;
+    opacity:.55;}
+  .vignette{position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:radial-gradient(120% 80% at 50% -10%, rgba(40,33,70,.35), transparent 60%),
+               radial-gradient(100% 60% at 50% 110%, rgba(20,40,60,.25), transparent 55%);}
+  .wrap{position:relative;z-index:1;max-width:var(--maxw);margin:0 auto;padding:0 24px;}
+
+  /* HERO */
+  .hero{min-height:94vh;display:flex;flex-direction:column;justify-content:center;
+    align-items:center;text-align:center;position:relative;padding:80px 24px 50px;}
+  .traveler{position:absolute;top:7%;left:50%;transform:translateX(-50%);
+    width:min(440px,80vw);height:min(440px,80vw);border-radius:50%;z-index:-1;
+    background:radial-gradient(circle at 38% 34%, #ffffff 0%, #e9e3d0 12%, #b9b29a 32%, #4a4636 55%, #15140f 75%, transparent 82%);
+    box-shadow:0 0 120px 30px rgba(236,202,110,.18), inset -30px -30px 90px rgba(0,0,0,.6);
+    opacity:.9;animation:breathe 9s ease-in-out infinite;}
+  @keyframes breathe{0%,100%{transform:translateX(-50%) scale(1);opacity:.9;}50%{transform:translateX(-50%) scale(1.03);opacity:1;}}
+  .hero__eyebrow{font-family:"Rajdhani",sans-serif;font-weight:600;letter-spacing:.42em;
+    text-transform:uppercase;font-size:.82rem;color:var(--light);margin-bottom:24px;text-indent:.42em;}
+  .hero__title{font-family:"Chakra Petch",sans-serif;font-weight:700;line-height:.98;
+    font-size:clamp(2.5rem,8vw,5.8rem);margin:0;letter-spacing:.01em;text-shadow:0 0 50px rgba(236,202,110,.25);}
+  .hero__title .dim{color:var(--text-dim);font-weight:400;}
+  .hero__sub{max-width:660px;margin:28px auto 0;color:var(--text-dim);font-size:1.08rem;}
+  .hero__hint{margin-top:18px;font-size:.92rem;color:var(--text-faint);}
+  .hero__hint b{color:var(--light);font-weight:600;}
+  .scrollcue{margin-top:40px;font-family:"Rajdhani",sans-serif;letter-spacing:.3em;
+    text-transform:uppercase;font-size:.7rem;color:var(--text-faint);animation:bob 2.4s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(7px);}}
+
+  /* QUICK MAP */
+  .quickmap{margin:10px auto 0;padding:26px 0 6px;border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+  .quickmap__label{font-family:"Rajdhani",sans-serif;font-weight:700;letter-spacing:.3em;
+    text-transform:uppercase;font-size:.72rem;color:var(--light);text-align:center;margin-bottom:18px;}
+  .qm-rail{display:flex;gap:0;overflow-x:auto;padding:6px 4px 18px;scrollbar-width:thin;}
+  .qm-node{flex:0 0 auto;width:122px;text-align:center;position:relative;padding-top:22px;
+    text-decoration:none;color:var(--text-dim);transition:color .2s;}
+  .qm-node::before{content:"";position:absolute;top:8px;left:0;right:0;height:2px;
+    background:var(--qc,var(--border-strong));opacity:.5;}
+  .qm-node:first-child::before{left:50%;}
+  .qm-node:last-child::before{right:50%;}
+  .qm-node::after{content:"";position:absolute;top:3px;left:50%;transform:translateX(-50%) rotate(45deg);
+    width:11px;height:11px;background:var(--void);border:2px solid var(--qc,var(--light));
+    box-shadow:0 0 10px var(--qc,var(--light));transition:transform .2s;}
+  .qm-node:hover{color:var(--text);}
+  .qm-node:hover::after{transform:translateX(-50%) rotate(45deg) scale(1.3);}
+  .qm-yr{display:block;font-family:"Rajdhani",sans-serif;font-weight:700;font-size:.78rem;color:var(--qc,var(--light));letter-spacing:.06em;}
+  .qm-nm{display:block;font-size:.76rem;line-height:1.2;margin-top:1px;}
+  .qm-refs{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px 14px;margin-top:14px;}
+  .qm-refs__label{font-family:"Rajdhani",sans-serif;font-weight:700;letter-spacing:.22em;
+    text-transform:uppercase;font-size:.64rem;color:var(--text-faint);}
+  .qm-refs a{font-family:"Rajdhani",sans-serif;font-weight:600;letter-spacing:.06em;font-size:.82rem;
+    color:var(--text-dim);text-decoration:none;border-bottom:1px solid transparent;}
+  .qm-refs a:hover{color:var(--light);border-bottom-color:var(--light);}
+  .qm-meta{text-align:center;margin-top:14px;font-size:.78rem;color:var(--text-faint);font-style:italic;}
+  .qm-guard{text-align:center;margin-top:14px;display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;justify-content:center;}
+  .qm-guard label{font-family:"Rajdhani",sans-serif;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+    font-size:.7rem;color:var(--text-dim);}
+  .qm-guard select{font-family:"Barlow",sans-serif;font-size:.86rem;color:var(--text);
+    background:var(--void-2);border:1px solid var(--border-strong);border-radius:5px;padding:5px 10px;cursor:pointer;}
+  .qm-guard select:hover{border-color:var(--light);}
+  .qm-guard__note{font-size:.76rem;color:var(--solar);font-style:italic;}
+
+  /* RAIDS */
+  .raids{max-width:var(--maxw);margin:24px auto 0;
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;}
+  .raid{background:linear-gradient(165deg,var(--surface-2),var(--void-2));border:1px solid var(--border);
+    border-radius:6px;padding:16px 18px;border-left:3px solid var(--prism);}
+  .raid__name{font-family:"Chakra Petch",sans-serif;font-weight:600;font-size:1.05rem;margin-bottom:5px;}
+  .raid__src{font-family:"Rajdhani",sans-serif;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+    font-size:.6rem;color:var(--text-faint);border:1px solid var(--border);padding:2px 7px;border-radius:20px;margin-left:4px;white-space:nowrap;}
+  .raid__txt{margin:0;font-size:.92rem;color:var(--text-dim);line-height:1.55;}
+  .raid__txt em{color:var(--prism);font-style:normal;}
+
+  /* board status icon */
+  .board__icon{width:13px;height:13px;margin-right:7px;vertical-align:-1px;display:inline-block;}
+
+  /* BACK TO TOP */
+  .totop{position:fixed;right:20px;bottom:20px;z-index:55;width:46px;height:46px;border-radius:50%;
+    background:linear-gradient(165deg,#1a2030,#0b0e16);border:1px solid var(--border-strong);
+    color:var(--light);font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 8px 24px rgba(0,0,0,.5);opacity:0;visibility:hidden;transform:translateY(10px);
+    transition:opacity .25s,transform .25s;}
+  .totop.show{opacity:1;visibility:visible;transform:none;}
+  .totop:hover{border-color:var(--light);box-shadow:0 0 18px rgba(236,202,110,.3);}
+
+  /* CODEX DRAWER */
+  .codexbtn{position:fixed;left:20px;bottom:20px;z-index:55;height:46px;padding:0 16px;border-radius:23px;
+    background:linear-gradient(165deg,#1a2030,#0b0e16);border:1px solid var(--border-strong);color:var(--light);
+    font-family:"Rajdhani",sans-serif;font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:.74rem;
+    cursor:pointer;display:flex;align-items:center;gap:8px;box-shadow:0 8px 24px rgba(0,0,0,.5);transition:border-color .2s,box-shadow .2s;}
+  .codexbtn:hover{border-color:var(--light);box-shadow:0 0 18px rgba(236,202,110,.3);}
+  .codexbtn svg{width:15px;height:15px;}
+  @keyframes codexpulse{0%,100%{box-shadow:0 8px 24px rgba(0,0,0,.5),0 0 0 0 rgba(236,202,110,.5);}50%{box-shadow:0 8px 24px rgba(0,0,0,.5),0 0 0 9px rgba(236,202,110,0);}}
+  .codexbtn{animation:codexpulse 1.7s ease-out 3 .8s;}
+  .cdx-backdrop{position:fixed;inset:0;z-index:58;background:rgba(2,3,6,.62);
+    opacity:0;visibility:hidden;transition:opacity .25s;}
+  .cdx-backdrop.open{opacity:1;visibility:visible;}
+  .cdx{position:fixed;top:0;right:0;bottom:0;z-index:59;width:380px;max-width:92vw;
+    background:linear-gradient(180deg,#0d1019,#070910);border-left:1px solid var(--border-strong);
+    box-shadow:-20px 0 60px rgba(0,0,0,.6);transform:translateX(102%);
+    transition:transform .3s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;}
+  .cdx.open{transform:none;}
+  .cdx__head{padding:18px 20px 14px;border-bottom:1px solid var(--border);}
+  .cdx__titlerow{display:flex;align-items:center;justify-content:space-between;}
+  .cdx__title{font-family:"Chakra Petch",sans-serif;font-weight:700;font-size:1.2rem;color:#fff;}
+  .cdx__close{background:none;border:none;color:var(--text-dim);font-size:1.6rem;cursor:pointer;line-height:1;padding:0 4px;}
+  .cdx__close:hover{color:#fff;}
+  .cdx__sub{font-size:.72rem;color:var(--text-faint);margin-top:2px;}
+  .cdx__search{width:100%;margin-top:12px;padding:9px 12px;border-radius:6px;border:1px solid var(--border-strong);
+    background:var(--void);color:var(--text);font-family:"Barlow",sans-serif;font-size:.9rem;}
+  .cdx__search:focus{outline:none;border-color:var(--light);}
+  .cdx__guardnote{margin-top:10px;font-size:.72rem;color:var(--solar);line-height:1.4;font-style:italic;
+    border-left:2px solid var(--solar);padding-left:9px;}
+  .cdx__body{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:6px 20px 34px;}
+  .cdx__sec{font-family:"Rajdhani",sans-serif;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+    font-size:.66rem;margin:18px 0 8px;}
+  .cdx__item{padding:9px 0;border-top:1px solid var(--border);}
+  .cdx__group:first-child .cdx__sec{margin-top:8px;}
+  .cdx__item:first-of-type{border-top:none;}
+  .cdx__term{font-family:"Chakra Petch",sans-serif;font-weight:600;font-size:.95rem;color:var(--text);}
+  .cdx__tag{font-family:"Rajdhani",sans-serif;font-weight:600;letter-spacing:.05em;text-transform:uppercase;
+    font-size:.6rem;color:var(--text-faint);margin-left:6px;}
+  .cdx__def{font-size:.85rem;color:var(--text-dim);line-height:1.5;margin-top:2px;}
+  .cdx__empty{color:var(--text-faint);font-size:.9rem;padding:24px 0;text-align:center;}
+  @media(max-width:520px){.codexbtn{padding:0 13px;font-size:.68rem;}}
+
+  /* hero darkness pyramid */
+  .pyramid{position:absolute;bottom:2%;left:50%;transform:translateX(-50%);width:min(300px,62vw);z-index:-2;
+    opacity:.32;pointer-events:none;}
+  .pyramid svg{display:block;width:100%;height:auto;}
+
+  /* INTRO */
+  .intro{max-width:var(--col);margin:0 auto;padding:34px 0 40px;}
+  .intro p{font-size:1.12rem;}
+  .intro .lead::first-letter{font-family:"Chakra Petch",sans-serif;font-weight:700;
+    font-size:3.4rem;float:left;line-height:.8;padding:6px 14px 0 0;color:var(--light);}
+
+  /* SAGA HEADERS */
+  .saga-head{max-width:var(--col);margin:64px auto 6px;padding-top:28px;border-top:1px solid var(--border);scroll-margin-top:20px;}
+  .saga-head__kicker{font-family:"Rajdhani",sans-serif;font-weight:700;letter-spacing:.32em;
+    text-transform:uppercase;font-size:.78rem;color:var(--accent);}
+  .saga-head__title{font-family:"Chakra Petch",sans-serif;font-weight:700;
+    font-size:clamp(1.8rem,4.5vw,2.7rem);margin:.25em 0 .15em;line-height:1.05;}
+  .saga-head__note{color:var(--text-dim);font-size:1rem;margin:0;}
+
+  /* TIMELINE SPINE */
+  .timeline{position:relative;max-width:var(--col);margin:26px auto 0;padding-left:64px;}
+  .timeline::before{content:"";position:absolute;left:21px;top:8px;bottom:0;width:2px;
+    background:linear-gradient(to bottom,
+      var(--solar) 0%, var(--void-p) 14%, var(--bone) 26%, var(--stasis) 38%,
+      var(--hive) 50%, var(--strand) 60%, var(--prism) 68%,
+      var(--arc) 78%, var(--darkmatter) 88%, var(--mars) 95%, var(--light) 100%);
+    opacity:.5;border-radius:2px;}
+
+  .era{position:relative;margin:0 0 50px;scroll-margin-top:20px;}
+  .era__node{position:absolute;left:-54px;top:4px;width:22px;height:22px;transform:rotate(45deg);
+    background:var(--void-2);border:2px solid var(--accent);box-shadow:0 0 16px var(--accent);}
+  .era__node::after{content:"";position:absolute;inset:4px;background:var(--accent);opacity:.85;}
+  .era__tag{font-family:"Rajdhani",sans-serif;font-weight:700;letter-spacing:.18em;
+    text-transform:uppercase;font-size:.72rem;color:var(--accent);display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;}
+  .era__tag .yr{color:var(--text-faint);font-weight:600;letter-spacing:.1em;}
+  .era__power{font-size:.64rem;color:var(--text-faint);border:1px solid var(--border);padding:2px 9px;border-radius:20px;}
+  .era__title{font-family:"Chakra Petch",sans-serif;font-weight:600;
+    font-size:clamp(1.35rem,3.2vw,1.85rem);margin:.3em 0 .45em;line-height:1.1;color:var(--text);}
+  .era__body p{margin:0 0 1em;}
+  .era__body strong{color:#eef1f7;font-weight:600;}
+  .era__body em{color:var(--accent);font-style:normal;font-weight:500;}
+
+  /* callout */
+  .callout{margin:18px 0 2px;background:linear-gradient(180deg,var(--surface),var(--void-2));
+    border:1px solid var(--border);border-left:3px solid var(--accent);padding:15px 20px;border-radius:4px;}
+  .callout__label{font-family:"Rajdhani",sans-serif;font-weight:700;letter-spacing:.2em;
+    text-transform:uppercase;font-size:.66rem;color:var(--accent);margin-bottom:6px;}
+  .callout p{margin:0;font-size:.96rem;color:var(--text-dim);line-height:1.6;}
+
+  /* INTERLUDE (seasons) */
+  .interlude{position:relative;margin:0 0 50px;}
+  .interlude__node{position:absolute;left:-52px;top:5px;width:14px;height:14px;border-radius:50%;
+    background:var(--void-2);border:2px dashed var(--text-faint);}
+  .interlude__head{font-family:"Rajdhani",sans-serif;font-weight:700;letter-spacing:.22em;
+    text-transform:uppercase;font-size:.68rem;color:var(--text-faint);margin-bottom:14px;}
+  .beat{display:grid;grid-template-columns:118px 1fr;gap:14px;padding:11px 0;border-top:1px solid var(--border);}
+  .beat:first-of-type{border-top:none;}
+  .beat__when{font-family:"Rajdhani",sans-serif;font-weight:600;font-size:.74rem;letter-spacing:.04em;
+    text-transform:uppercase;color:var(--bc,var(--text-dim));line-height:1.4;padding-top:2px;}
+  .beat__what{font-size:.96rem;color:var(--text-dim);line-height:1.55;margin:0;}
+  .beat__what strong{color:var(--text);font-weight:600;}
+  @media(max-width:520px){.beat{grid-template-columns:1fr;gap:3px;}.beat__when{padding-top:0;}}
+
+  /* inline character refs */
+  .ref{font:inherit;color:var(--light);background:none;border:none;padding:0;cursor:pointer;
+    border-bottom:1px dotted rgba(236,202,110,.55);line-height:inherit;}
+  .ref:hover,.ref:focus-visible{color:#fff;border-bottom-color:#fff;outline:none;}
+
+  /* popover */
+  .pop{position:absolute;z-index:60;width:312px;max-width:calc(100vw - 28px);
+    background:linear-gradient(165deg,#161b29,#0b0e16);border:1px solid var(--border-strong);
+    border-radius:8px;padding:0;box-shadow:0 18px 50px rgba(0,0,0,.6);opacity:0;visibility:hidden;
+    transform:translateY(6px);transition:opacity .16s,transform .16s;pointer-events:none;}
+  .pop.show{opacity:1;visibility:visible;transform:none;pointer-events:auto;}
+  .pop__bar{height:3px;background:var(--pc,var(--light));border-radius:8px 8px 0 0;}
+  .pop__in{padding:16px 18px 18px;}
+  .pop__role{font-family:"Rajdhani",sans-serif;font-weight:600;letter-spacing:.18em;
+    text-transform:uppercase;font-size:.62rem;color:var(--pc,var(--light));}
+  .pop__name{font-family:"Chakra Petch",sans-serif;font-weight:600;font-size:1.22rem;margin:.1em 0 .5em;color:#fff;}
+  .pop__meta{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:11px;}
+  .pop__chip{font-family:"Rajdhani",sans-serif;font-weight:600;font-size:.64rem;letter-spacing:.08em;
+    text-transform:uppercase;padding:3px 9px;border-radius:20px;border:1px solid var(--border);color:var(--text-dim);}
+  .pop__chip.status{color:var(--pc,var(--light));border-color:color-mix(in srgb,var(--pc,var(--light)) 45%,transparent);}
+  .pop__arc{font-size:.9rem;line-height:1.55;color:var(--text-dim);margin:0;}
+
+  /* FACTIONS */
+  .factions{max-width:var(--maxw);margin:24px auto 0;
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;}
+  .fac{background:linear-gradient(165deg,var(--surface-2),var(--void-2));border:1px solid var(--border);
+    border-radius:6px;padding:18px 20px;border-top:3px solid var(--accent);}
+  .fac__top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px;}
+  .fac__name{font-family:"Chakra Petch",sans-serif;font-weight:600;font-size:1.12rem;}
+  .fac__status{font-family:"Rajdhani",sans-serif;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+    font-size:.64rem;color:var(--accent);white-space:nowrap;}
+  .fac__txt{font-size:.92rem;color:var(--text-dim);line-height:1.55;margin:0;}
+
+  /* CASUALTY BOARD */
+  .board{max-width:var(--maxw);margin:24px auto 0;
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;align-items:start;}
+  .board__col{background:linear-gradient(165deg,var(--surface-2),var(--void-2));
+    border:1px solid var(--border);border-radius:6px;border-top:3px solid var(--accent);
+    padding:16px 18px 8px;}
+  .board__head{font-family:"Rajdhani",sans-serif;font-weight:700;letter-spacing:.16em;
+    text-transform:uppercase;font-size:.72rem;color:var(--accent);margin-bottom:6px;}
+  .board__row{padding:9px 0;border-top:1px solid var(--border);}
+  .board__row:first-of-type{border-top:none;}
+  .board__name,.board__row .ref{font-family:"Chakra Petch",sans-serif;font-weight:600;
+    font-size:.98rem;color:var(--text);display:inline-block;}
+  .board__row .ref{color:var(--text);border-bottom:1px dotted var(--border-strong);}
+  .board__row .ref:hover,.board__row .ref:focus-visible{color:#fff;border-bottom-color:#fff;}
+  .board__name{color:var(--text);}
+  .board__note{display:block;font-size:.82rem;color:var(--text-faint);line-height:1.45;margin-top:1px;}
+
+  /* POWERS */
+  .powers{max-width:var(--col);margin:26px auto 0;display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;}
+  .pw{display:flex;gap:10px;font-size:.9rem;color:var(--text-dim);background:var(--void-2);
+    border:1px solid var(--border);border-radius:5px;padding:12px 14px;}
+  .pw .dot{width:11px;height:11px;margin-top:5px;flex:none;transform:rotate(45deg);box-shadow:0 0 10px currentColor;}
+  .pw b{display:block;color:var(--text);font-family:"Chakra Petch",sans-serif;font-weight:600;font-size:.95rem;}
+
+  /* STATE NOW */
+  .statenow{max-width:var(--col);margin:26px auto 0;background:var(--void-2);
+    border:1px solid var(--border);border-radius:8px;padding:26px 28px;}
+  .statenow p{margin:0 0 .9em;color:var(--text-dim);font-size:1rem;}
+  .statenow p:last-child{margin-bottom:0;}
+  .statenow strong{color:var(--text);font-weight:600;}
+
+  /* TL;DR */
+  .tldr{max-width:var(--col);margin:6px auto 0;background:linear-gradient(180deg,rgba(236,202,110,.06),var(--void-2));
+    border:1px solid var(--border);border-left:3px solid var(--light);border-radius:6px;padding:20px 24px;}
+  .tldr__label{font-family:"Rajdhani",sans-serif;font-weight:700;letter-spacing:.22em;text-transform:uppercase;
+    font-size:.7rem;color:var(--light);margin-bottom:8px;}
+  .tldr p{margin:0;color:var(--text-dim);font-size:1.02rem;line-height:1.6;}
+  .tldr em{color:var(--light);font-style:normal;}
+  .tldr strong{color:var(--text);font-weight:600;}
+
+  /* GLOSSARY */
+  .glossary{max-width:var(--maxw);margin:24px auto 0;
+    display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px;}
+  .gl{background:var(--void-2);border:1px solid var(--border);border-radius:6px;
+    padding:14px 16px;font-size:.92rem;color:var(--text-dim);line-height:1.5;}
+  .gl b{display:block;font-family:"Chakra Petch",sans-serif;font-weight:600;font-size:.98rem;
+    color:var(--text);margin-bottom:3px;letter-spacing:.01em;}
+
+  /* ENDINGS + SPOILER */
+  .endings{max-width:var(--col);margin:18px auto 0;background:var(--void-2);
+    border:1px solid var(--border);border-radius:8px;padding:24px 26px;}
+  .endings__head{font-family:"Rajdhani",sans-serif;font-weight:700;letter-spacing:.2em;
+    text-transform:uppercase;font-size:.72rem;color:var(--prism);margin-bottom:10px;}
+  .endings__intro{margin:0 0 16px;color:var(--text-dim);font-size:.98rem;}
+  .endings__intro strong{color:var(--text);font-weight:600;}
+  .spoiler{border:1px solid var(--border);border-radius:6px;margin-bottom:10px;background:rgba(255,255,255,.015);overflow:hidden;}
+  .spoiler:last-child{margin-bottom:0;}
+  .spoiler summary{cursor:pointer;list-style:none;padding:13px 16px;font-family:"Chakra Petch",sans-serif;
+    font-weight:600;font-size:.98rem;color:var(--text);display:flex;align-items:center;gap:10px;}
+  .spoiler summary::-webkit-details-marker{display:none;}
+  .spoiler summary::before{content:"▸";color:var(--prism);transition:transform .2s;display:inline-block;}
+  .spoiler[open] summary::before{transform:rotate(90deg);}
+  .spoiler__tag{margin-left:auto;font-family:"Rajdhani",sans-serif;font-weight:700;letter-spacing:.14em;
+    text-transform:uppercase;font-size:.6rem;color:var(--solar);border:1px solid color-mix(in srgb,var(--solar) 45%,transparent);
+    padding:2px 8px;border-radius:20px;}
+  .spoiler p{margin:0;padding:0 16px 16px;color:var(--text-dim);font-size:.95rem;line-height:1.58;}
+  .spoiler em{color:var(--text);font-style:italic;}
+
+  /* CHECKLIST */
+  .checklist{max-width:var(--col);margin:24px auto 0;background:var(--void-2);
+    border:1px solid var(--border);border-radius:8px;padding:18px 26px 22px;}
+  .checklist ul{list-style:none;margin:0;padding:0;}
+  .checklist li{position:relative;padding:12px 0 12px 30px;border-top:1px solid var(--border);
+    color:var(--text-dim);font-size:.97rem;line-height:1.55;}
+  .checklist li:first-child{border-top:none;}
+  .checklist li::before{content:"";position:absolute;left:2px;top:18px;width:9px;height:9px;
+    transform:rotate(45deg);background:var(--light);box-shadow:0 0 8px var(--light);}
+  .checklist b{color:var(--text);font-weight:600;}
+  .checklist strong{color:var(--light);font-weight:600;}
+
+  /* EPILOGUE */
+  .epilogue{max-width:var(--col);margin:56px auto 0;text-align:center;padding:48px 30px;
+    border:1px solid var(--border);border-radius:8px;
+    background:radial-gradient(120% 100% at 50% 0%, rgba(236,202,110,.08), transparent 70%),var(--void-2);}
+  .epilogue .saga-head__kicker{color:var(--light);}
+  .epilogue h2{font-family:"Chakra Petch",sans-serif;font-weight:700;font-size:clamp(1.7rem,4vw,2.4rem);margin:.3em 0;}
+  .epilogue p{color:var(--text-dim);max-width:560px;margin:.6em auto;}
+
+  footer{max-width:var(--col);margin:48px auto 0;padding:28px 0 80px;border-top:1px solid var(--border);
+    text-align:center;font-family:"Rajdhani",sans-serif;letter-spacing:.18em;text-transform:uppercase;
+    font-size:.72rem;color:var(--text-faint);line-height:2;}
+  footer .em{color:var(--text-dim);}
+  .footer__note{margin-top:18px;text-transform:none;letter-spacing:.01em;font-size:.74rem;line-height:1.6;
+    color:var(--text-faint);max-width:560px;margin-left:auto;margin-right:auto;font-family:"Barlow",sans-serif;}
+  .footer__note strong{color:var(--text-dim);font-weight:600;}
+
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease;}
+  .reveal.in{opacity:1;transform:none;}
+  a{color:var(--light);}
+  :focus-visible{outline:2px solid var(--light);outline-offset:3px;}
+
+  @media(max-width:560px){
+    body{font-size:16.5px;}
+    .timeline{padding-left:46px;}
+    .timeline::before{left:13px;}
+    .era__node{left:-44px;width:18px;height:18px;}
+    .interlude__node{left:-42px;}
+  }
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto;}.reveal{opacity:1;transform:none;transition:none;}}
+  @media print{
+    body{background:#fff;color:#111;}
+    .stars,.vignette,.traveler,.pyramid,.progress,.totop,.scrollcue,.pop{display:none!important;}
+    .reveal{opacity:1!important;transform:none!important;}
+    .hero{min-height:auto;padding:20px 0;}
+    .hero__title{color:#111;text-shadow:none;}
+    .spoiler{break-inside:avoid;}
+    .spoiler[open] summary~p{color:#333;}
+    a,.ref{color:#111;}
+    .era,.fac,.gl,.raid,.board__col,.callout,.tldr,.statenow,.checklist,.endings{break-inside:avoid;}
+  }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="stars"></div>
+<div class="vignette"></div>
+
+<header class="hero">
+  <div class="traveler" aria-hidden="true"></div>
+  <div class="pyramid" aria-hidden="true">
+    <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="pyrg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#3a3550"/>
+          <stop offset="1" stop-color="#05060a"/>
+        </linearGradient>
+      </defs>
+      <polygon points="100,8 188,142 12,142" fill="url(#pyrg)" stroke="#7a6fb0" stroke-width="0.8" stroke-opacity="0.5"/>
+      <polygon points="100,8 100,142 12,142" fill="#000" fill-opacity="0.35"/>
+      <line x1="100" y1="8" x2="100" y2="142" stroke="#7a6fb0" stroke-width="0.5" stroke-opacity="0.4"/>
+    </svg>
+  </div>
+  <div class="hero__eyebrow">A Guardian's Catch-Up · Sol System</div>
+  <h1 class="hero__title">The Light,<br>the Darkness<br><span class="dim">& the Fate to come</span></h1>
+  <p class="hero__sub">Everything that's happened in Destiny 2 — the wars, the gods, the deaths, the alliances that redrew the system — caught up in one read, from the caging of the Traveler to the Monument of Triumph.</p>
+  <p class="hero__hint">Tip: <b>hover or tap any underlined name</b> for a quick profile of who they are and where they stand.</p>
+  <div class="scrollcue">Descend ↓</div>
+</header>
+
+<div class="wrap">
+
+  <!-- QUICK MAP -->
+  <nav class="quickmap reveal" aria-label="Timeline">
+    <div class="quickmap__label">The Timeline · jump to any chapter</div>
+    <div class="qm-rail">
+      <a class="qm-node" href="#redwar"  style="--qc:var(--solar)"><span class="qm-yr">2017</span><span class="qm-nm">Red War</span></a>
+      <a class="qm-node" href="#forsaken" style="--qc:var(--void-p)"><span class="qm-yr">2018</span><span class="qm-nm">Forsaken</span></a>
+      <a class="qm-node" href="#shadowkeep" style="--qc:var(--bone)"><span class="qm-yr">2019</span><span class="qm-nm">Shadowkeep</span></a>
+      <a class="qm-node" href="#beyondlight" style="--qc:var(--stasis)"><span class="qm-yr">2020</span><span class="qm-nm">Beyond Light</span></a>
+      <a class="qm-node" href="#witchqueen" style="--qc:var(--hive)"><span class="qm-yr">2022</span><span class="qm-nm">Witch Queen</span></a>
+      <a class="qm-node" href="#lightfall" style="--qc:var(--strand)"><span class="qm-yr">2023</span><span class="qm-nm">Lightfall</span></a>
+      <a class="qm-node" href="#finalshape" style="--qc:var(--prism)"><span class="qm-yr">2024</span><span class="qm-nm">Final Shape</span></a>
+      <a class="qm-node" href="#echoes" style="--qc:var(--arc)"><span class="qm-yr">'24–'25</span><span class="qm-nm">The Echoes</span></a>
+      <a class="qm-node" href="#edgeoffate" style="--qc:var(--darkmatter)"><span class="qm-yr">2025</span><span class="qm-nm">Edge of Fate</span></a>
+      <a class="qm-node" href="#renegades" style="--qc:var(--mars)"><span class="qm-yr">2025</span><span class="qm-nm">Renegades</span></a>
+      <a class="qm-node" href="#monument" style="--qc:var(--light)"><span class="qm-yr">2026</span><span class="qm-nm">Monument</span></a>
+    </div>
+    <div class="qm-refs">
+      <span class="qm-refs__label">Reference</span>
+      <a href="#factions">Factions</a><a href="#casualties">Casualties</a><a href="#raids">Raids</a><a href="#" id="codexNavLink">Codex</a><a href="#returning">Returning guide</a>
+    </div>
+    <div class="qm-meta">≈ 20-minute read · spoiler-safe (the endings stay hidden until you choose) · current as of Monument of Triumph, June 2026</div>
+    <div class="qm-guard">
+      <label for="spoilerGuard">Spoiler guard — I've played up to:</label>
+      <select id="spoilerGuard">
+        <option value="10" selected>Everything (through Renegades)</option>
+        <option value="1">The Red War</option>
+        <option value="2">Forsaken</option>
+        <option value="3">Shadowkeep</option>
+        <option value="4">Beyond Light</option>
+        <option value="5">The Witch Queen</option>
+        <option value="6">Lightfall</option>
+        <option value="7">The Final Shape</option>
+        <option value="8">The Echoes (Episodes)</option>
+        <option value="9">The Edge of Fate</option>
+      </select>
+      <span class="qm-guard__note" id="guardNote"></span>
+    </div>
+  </nav>
+
+  <!-- PROLOGUE -->
+  <section class="intro reveal">
+    <p class="lead">Long ago, a vast white sphere — <strong>the Traveler</strong> — drifted into our solar system and gifted humanity a Golden Age of impossible science, before its ancient enemy, <strong>the Darkness</strong>, caught it. In the cataclysm called the <strong>Collapse</strong>, the dying Traveler released the <strong>Light</strong> and the <strong>Ghosts</strong> — sparks that raise the dead as <strong>Guardians</strong>, immortal soldiers who defend the <strong>Last City</strong> beneath the Traveler's silent husk.</p>
+    <p>You are one of them. Your commanders are the <strong>Vanguard</strong>: the Titan <button class="ref" data-c="zavala">Zavala</button>, the Warlock <button class="ref" data-c="ikora">Ikora Rey</button>, and the Hunter <button class="ref" data-c="cayde">Cayde-6</button>. What follows is the story of the last decade — told for someone who's dipped in and out, with the focus on the moments that actually changed the universe: who died, who switched sides, and which worlds were lost or won.</p>
+  </section>
+
+  <section class="tldr reveal" data-stage="10" aria-label="Short summary">
+    <div class="tldr__label">The whole saga in 90 seconds</div>
+    <p>The Cabal's <button class="ref" data-c="ghaul">Ghaul</button> caged the Traveler and lost; that woke it and summoned its ancient enemy, <button class="ref" data-c="witness">the Witness</button>. Over ten years you lost <button class="ref" data-c="cayde">Cayde-6</button>, learned the truth that Light and Dark aren't good and evil, mastered the Darkness yourself, and — alongside humanity, the Eliksni and the Cabal — finally killed the Witness <em>inside</em> the Traveler. But its death cracked the cosmic order. Now the <button class="ref" data-c="nine">Nine</button> are dying and at war with themselves, a buried prophecy says they must be bound to survive, and the Vanguard has fractured over hiding the truth. <strong>Monument of Triumph</strong> is the game's send-off — and its two hidden cutscenes are the real last word. The detail's all below; hover any name for who they are.</p>
+  </section>
+
+  <!-- ===================== SAGA ONE ===================== -->
+  <div class="saga-head reveal" style="--accent:var(--light)">
+    <div class="saga-head__kicker">Saga One · 2017 – 2024</div>
+    <h2 class="saga-head__title">The Light &amp; Darkness Saga</h2>
+    <p class="saga-head__note">The ten-year war that began with a stolen Light and ended inside the Traveler itself.</p>
+  </div>
+
+  <div class="timeline">
+
+    <article class="era reveal" id="redwar" data-stage="1" style="--accent:var(--solar)">
+      <span class="era__node"></span>
+      <div class="era__tag">The Red War <span class="yr">· 2017</span> <span class="era__power">Light restored</span></div>
+      <h3 class="era__title">Ghaul Cages the Light</h3>
+      <div class="era__body">
+        <p><button class="ref" data-c="ghaul">Dominus Ghaul</button>, commander of the Cabal <strong>Red Legion</strong>, does what no enemy dared: he cages the Traveler and severs every Guardian from the Light. Stripped and nearly killed, you flee to the <strong>European Dead Zone</strong>, commune with a wild Shard of the Traveler, and claw your Light back.</p>
+        <p>You retake the City. When Ghaul tries to <em>seize</em> the Light by force, the Traveler wakes — and obliterates him in a burst that ripples out across the galaxy as a signal. Something very old hears it, and starts to move.</p>
+      </div>
+      <div class="callout">
+        <div class="callout__label">Side chapters · Mercury &amp; Mars</div>
+        <p><strong>Curse of Osiris</strong> introduces the exiled Warlock <button class="ref" data-c="osiris">Osiris</button> and the Vex's reality-simulating Infinite Forest. <strong>Warmind</strong> reawakens the Golden-Age war-AI <button class="ref" data-c="rasputin">Rasputin</button> with Ana Bray beneath Mars. Both seed threads that pay off years later.</p>
+      </div>
+    </article>
+
+    <article class="era reveal" id="forsaken" data-stage="2" style="--accent:var(--void-p)">
+      <span class="era__node"></span>
+      <div class="era__tag">Forsaken <span class="yr">· 2018</span> <span class="era__power">The turning point</span></div>
+      <h3 class="era__title">The Death of Cayde-6</h3>
+      <div class="era__body">
+        <p>A prison break in the Reef ends with <button class="ref" data-c="cayde">Cayde-6</button> <strong>murdered</strong> by <button class="ref" data-c="crow">Uldren Sov</button>, the unstable exiled prince of the Awoken. Hunting his killer across the lawless <strong>Tangled Shore</strong>, you're pulled into the <strong>Dreaming City</strong> — Queen <button class="ref" data-c="mara">Mara Sov</button>'s hidden realm — and the real hand behind it: <button class="ref" data-c="savathun">Savathûn</button>, working through Riven, the last wish-granting Ahamkara.</p>
+        <p>You kill Uldren, but the City falls into an endless three-week time loop you can never quite break. This is also where you meet <button class="ref" data-c="drifter">the Drifter</button> and his high-stakes game, Gambit — and where Uldren's discarded Ghost finds his corpse, ready to raise him anew.</p>
+      </div>
+      <div class="callout">
+        <div class="callout__label">The death that changed the tone</div>
+        <p>Forsaken is the hinge of the whole series: the loss of Cayde turns a hopeful space-fantasy into a story about grief, revenge and, eventually, forgiveness.</p>
+      </div>
+    </article>
+
+    <article class="interlude reveal" data-stage="2">
+      <span class="interlude__node"></span>
+      <div class="interlude__head">Between chapters · the Forsaken-year seasons</div>
+      <div class="beat"><div class="beat__when">Forge</div><p class="beat__what"><strong>Black Armory.</strong> The gunsmith Ada-1 reopens the Golden-Age weapon forges against Fallen raiders. Self-contained, but it introduces Ada-1, who sticks around as a Tower vendor.</p></div>
+      <div class="beat"><div class="beat__when" style="--bc:var(--void-p)">Drifter</div><p class="beat__what"><strong>Gambit deepens.</strong> The <button class="ref" data-c="drifter">Drifter</button> sets up shop in the Tower and his shady past with the Nine starts to surface — early seeds of the Fate saga.</p></div>
+      <div class="beat"><div class="beat__when">Opulence</div><p class="beat__what">The exiled emperor <button class="ref" data-c="calus">Calus</button> opens his pleasure-barge, the Leviathan, to Guardians — planting a name that matters enormously later.</p></div>
+    </article>
+
+    <article class="era reveal" id="shadowkeep" data-stage="3" style="--accent:var(--bone)">
+      <span class="era__node"></span>
+      <div class="era__tag">Shadowkeep <span class="yr">· 2019</span> <span class="era__power">The Darkness arrives</span></div>
+      <h3 class="era__title">The Pyramid on the Moon</h3>
+      <div class="era__body">
+        <p><button class="ref" data-c="eris">Eris Morn</button> calls you back to the Moon, where a black <strong>Pyramid ship</strong> — a vessel of the Darkness itself — lies buried. It conjures <strong>Nightmares</strong> of the dead you've lost and, at its core, offers something stranger than a fight: a conversation.</p>
+        <p>The ancient enemy that hunted the Traveler hasn't just sent armies. It has arrived <em>in person</em> — and it has been waiting in our system for a very long time.</p>
+      </div>
+    </article>
+
+    <article class="interlude reveal" data-stage="3">
+      <span class="interlude__node"></span>
+      <div class="interlude__head">Between chapters · the Shadowkeep-year seasons</div>
+      <div class="beat"><div class="beat__when" style="--bc:var(--stasis)">Undying</div><p class="beat__what">A Vex Offensive pours out of the Black Garden; <button class="ref" data-c="ikora">Ikora</button> and Osiris beat it back. Mostly an isolated Vex skirmish.</p></div>
+      <div class="beat"><div class="beat__when" style="--bc:var(--solar)">Dawn</div><p class="beat__what"><strong>A legend comes home.</strong> You and Osiris pull the lost Titan <button class="ref" data-c="saint">Saint-14</button> out of the timestream and back to the living — but Osiris's Ghost, Sagira, is killed in the process.</p></div>
+      <div class="beat"><div class="beat__when">Worthy</div><p class="beat__what"><strong>The Almighty crisis.</strong> Ghaul's old Cabal superweapon falls toward the Last City; <button class="ref" data-c="rasputin">Rasputin</button> destroys it at the last second, but debris scars the Tower — visible damage that's still there today.</p></div>
+      <div class="beat"><div class="beat__when" style="--bc:var(--bone)">Arrivals</div><p class="beat__what"><strong>The Darkness comes openly.</strong> The Black Fleet of Pyramids enters the system in force and begins offering its power to anyone who'll listen — the direct lead-in to Beyond Light.</p></div>
+    </article>
+
+    <article class="era reveal" id="beyondlight" data-stage="4" style="--accent:var(--stasis)">
+      <span class="era__node"></span>
+      <div class="era__tag">Beyond Light <span class="yr">· 2020</span> <span class="era__power">Stasis · first Dark power</span></div>
+      <h3 class="era__title">Wielding the Enemy's Power</h3>
+      <div class="era__body">
+        <p>On Jupiter's frozen moon <strong>Europa</strong>, the exiled Fallen warlord <button class="ref" data-c="eramis">Eramis</button> bends the Darkness into a weapon: <strong>Stasis</strong>, the power of cosmic ice. To stop her you learn to wield it too — the first time Guardians turn the Darkness to their own ends — guided by the time-lost <button class="ref" data-c="elsie">Exo Stranger</button>.</p>
+        <p>The lesson of Europa is uncomfortable: the Darkness isn't simply evil. It's a tool — and now it's yours.</p>
+      </div>
+      <div class="callout">
+        <div class="callout__label">Universe change · four worlds vanish</div>
+        <p>As Beyond Light arrives, <strong>Mercury, Mars, Titan, Io and the Leviathan disappear</strong> — the Witness uses the Darkness to <em>steal entire planets</em> into the void. Mars' moons are left orbiting an empty maw. The system gets smaller, and the threat gets a lot more real.</p>
+      </div>
+    </article>
+
+    <article class="interlude reveal" data-stage="4">
+      <span class="interlude__node"></span>
+      <div class="interlude__head">Between chapters · the Beyond Light-year seasons</div>
+      <div class="beat"><div class="beat__when" style="--bc:var(--void-p)">Hunt</div><p class="beat__what"><strong>The killer resurfaces.</strong> Uldren's resurrected form, now called <button class="ref" data-c="crow">the Crow</button>, is discovered alive and working under the Spider in the Tangled Shore — the start of his long road back to trust.</p></div>
+      <div class="beat"><div class="beat__when" style="--bc:var(--mars)">Chosen</div><p class="beat__what"><strong>A new Cabal power.</strong> <button class="ref" data-c="caiatl">Empress Caiatl</button>, daughter of Calus, arrives demanding humanity bend the knee — and, after a clash of wills with Zavala, becomes a wary ally.</p></div>
+      <div class="beat"><div class="beat__when" style="--bc:var(--arc)">Splicer</div><p class="beat__what"><strong>Old enemies become neighbours.</strong> <button class="ref" data-c="mithrax">Mithrax</button> and his House of Light are granted sanctuary <em>inside the Last City</em> — an Eliksni (Fallen) Quarter rises within humanity's walls, the first true peace between the two peoples.</p></div>
+      <div class="beat"><div class="beat__when" style="--bc:var(--hive)">Lost</div><p class="beat__what"><strong>The mask slips.</strong> The "Osiris" who'd been advising the Vanguard is revealed to be <button class="ref" data-c="savathun">Savathûn</button> in disguise. <button class="ref" data-c="mara">Mara Sov</button> returns and severs Savathûn from her parasitic worm — the prelude to the Witch Queen.</p></div>
+    </article>
+
+    <article class="era reveal" id="witchqueen" data-stage="5" style="--accent:var(--hive)">
+      <span class="era__node"></span>
+      <div class="era__tag">The Witch Queen <span class="yr">· 2022</span> <span class="era__power">Truth of the Light</span></div>
+      <h3 class="era__title">Savathûn Steals the Light</h3>
+      <div class="era__body">
+        <p><button class="ref" data-c="savathun">Savathûn</button> returns wielding the <em>Light</em> — Hive raised by their own stolen Ghosts, the <strong>Lucent Brood</strong> — and dares you into her storybook <strong>Throne World</strong> to learn how. The answer rewrites the whole war: she didn't steal the Light at all. <strong>The Traveler chose her.</strong></p>
+        <p>You sever her bargain by killing her body, but her Ghost vanishes, and a warning lingers about the far greater power behind every Pyramid, now almost here.</p>
+      </div>
+      <div class="callout">
+        <div class="callout__label">Why it matters</div>
+        <p>If the Traveler can choose an enemy as monstrous as Savathûn, then Light and Darkness were never simply "good" and "evil." That single revelation is the philosophical hinge the whole saga turns on.</p>
+      </div>
+    </article>
+
+    <article class="interlude reveal" data-stage="5">
+      <span class="interlude__node"></span>
+      <div class="interlude__head">Between chapters · the Witch Queen-year seasons</div>
+      <div class="beat"><div class="beat__when" style="--bc:var(--mars)">Risen</div><p class="beat__what"><strong>The alliance holds.</strong> <button class="ref" data-c="caiatl">Caiatl</button> and the Vanguard formally join forces against the Lucent Hive — humanity, Cabal and Eliksni now fighting on the same side.</p></div>
+      <div class="beat"><div class="beat__when" style="--bc:var(--prism)">Haunted</div><p class="beat__what"><strong>Calus turns zealot.</strong> The derelict Leviathan reappears, haunted by Nightmares; aboard it, <button class="ref" data-c="calus">Calus</button> pledges himself to the Witness as its newest <strong>Disciple</strong>. Zavala, Crow, Caiatl and Eris each face their own ghosts.</p></div>
+      <div class="beat"><div class="beat__when" style="--bc:var(--stasis)">Plunder</div><p class="beat__what"><button class="ref" data-c="eramis">Eramis</button> is freed from her Stasis prison amid Eliksni pirate politics — a lower-stakes chapter that keeps her in play as a recurring antagonist.</p></div>
+      <div class="beat"><div class="beat__when" style="--bc:var(--arc)">Seraph</div><p class="beat__what"><strong>A Warmind falls.</strong> To keep his power from the Witness and Xivu Arath, <button class="ref" data-c="rasputin">Rasputin</button> sacrifices himself — humanity loses its ancient automated guardian for good.</p></div>
+    </article>
+
+    <article class="era reveal" id="lightfall" data-stage="6" style="--accent:var(--strand)">
+      <span class="era__node"></span>
+      <div class="era__tag">Lightfall <span class="yr">· 2023</span> <span class="era__power">Strand</span></div>
+      <h3 class="era__title">The Witness Wounds the Traveler</h3>
+      <div class="era__body">
+        <p><button class="ref" data-c="witness">The Witness</button> — the mind behind every Pyramid and the original Collapse — reaches the hidden neon city of <strong>Neomuna</strong> on Neptune (a pocket of humanity that secretly survived the Golden Age), hunting the <strong>Veil</strong>, a dark mirror of the Traveler. You master <strong>Strand</strong>, weaving Darkness into telekinetic threads, while <button class="ref" data-c="calus">Calus</button> stands as the Witness's Disciple.</p>
+        <p>It isn't enough. The Witness claims the Veil and carves a <em>triangular wound</em> straight into the Traveler, tearing open a portal to the place it has wanted to reach since the dawn of everything.</p>
+      </div>
+    </article>
+
+    <article class="interlude reveal" data-stage="6">
+      <span class="interlude__node"></span>
+      <div class="interlude__head">Between chapters · the Lightfall-year seasons</div>
+      <div class="beat"><div class="beat__when" style="--bc:var(--void-p)">Defiance</div><p class="beat__what"><strong>A beloved death.</strong> The Witness's Shadow Legion assaults the Last City and seizes Awoken prisoners; in the rescue, the Tower's warm-hearted shipwright <button class="ref" data-c="amanda">Amanda Holliday</button> is killed.</p></div>
+      <div class="beat"><div class="beat__when" style="--bc:var(--stasis)">Deep</div><p class="beat__what"><strong>A world returns.</strong> <strong>Titan resurfaces</strong> from the void, and with it <button class="ref" data-c="sloane">Commander Sloane</button> — now bonded to Ahsa, an ancient Darkness-touched leviathan, no longer entirely human.</p></div>
+      <div class="beat"><div class="beat__when" style="--bc:var(--hive)">Witch</div><p class="beat__what"><strong>Eris goes deeper.</strong> <button class="ref" data-c="eris">Eris Morn</button> strikes a bargain with Savathûn's lingering essence and takes up Hive sorcery herself — the first step toward becoming the Heresiarch.</p></div>
+      <div class="beat"><div class="beat__when" style="--bc:var(--light)">Wish</div><p class="beat__what"><strong>The final season; the door opens.</strong> With Riven, Crow and Mara Sov, the "15th Wish" is made — opening the path that will lead Guardians into the Traveler itself for the Final Shape.</p></div>
+    </article>
+
+    <article class="era reveal" id="finalshape" data-stage="7" style="--accent:var(--prism)">
+      <span class="era__node" style="--accent:var(--prism)"></span>
+      <div class="era__tag" style="--accent:var(--prism)">The Final Shape <span class="yr">· 2024</span> <span class="era__power">Prismatic · Light + Dark</span></div>
+      <h3 class="era__title" style="background:linear-gradient(90deg,var(--solar),var(--arc),var(--void-p),var(--strand));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;">Into the Pale Heart</h3>
+      <div class="era__body">
+        <p>The chase leads <em>inside</em> the Traveler, into the <strong>Pale Heart</strong> — a dreamscape woven from memory, where a resurrected <button class="ref" data-c="cayde">Cayde-6</button> walks again at your side. Fusing Light and Dark into the <strong>Prismatic</strong> power, you rally a full coalition — humanity, the Eliksni, and Cabal — against the Witness's design.</p>
+        <p>In the raid <strong>Salvation's Edge</strong> and the climactic mission <strong>Excision</strong>, the assembled Guardians unravel the <button class="ref" data-c="witness">Witness</button>'s collective mind for good. After ten years, the <strong>Light and Darkness Saga ends</strong> — but killing a being that old leaves a hole in the order of the cosmos.</p>
+      </div>
+      <div class="callout" style="--accent:var(--prism)">
+        <div class="callout__label">Who the Witness was</div>
+        <p>The Final Shape reveals the Witness's origin: once a mortal species the Traveler visited and then left behind, they grew so desperate for a single fixed meaning that they merged into one mind and seized the Darkness — vowing to freeze all of creation into one perfect "final shape." The villain of the whole saga was, at root, a people who couldn't bear an unfinished universe.</p>
+      </div>
+      <div class="callout" style="--accent:var(--prism)">
+        <div class="callout__label">The cost &amp; the crack</div>
+        <p><button class="ref" data-c="zavala">Zavala</button> nearly loses his faith; Cayde returns only within the Pale Heart; the coalition of former enemies holds. The Witness is gone — and its death is the first domino of the next saga.</p>
+      </div>
+    </article>
+
+  </div>
+
+  <!-- ===================== EPISODES ===================== -->
+  <div class="saga-head reveal" id="echoes" data-stage="8" style="--accent:var(--arc)">
+    <div class="saga-head__kicker">Interlude · Year 7 Episodes · 2024 – 2025</div>
+    <h2 class="saga-head__title">The Echoes</h2>
+    <p class="saga-head__note">With the Witness dead, its leftover power lingers as <em>Echoes</em> that warp its former servants. Three episodes tie off the saga's loose threads.</p>
+  </div>
+
+  <div class="timeline" data-stage="8">
+    <article class="era reveal" style="--accent:var(--arc)">
+      <span class="era__node"></span>
+      <div class="era__tag">Episode: Echoes <span class="yr">· Vex</span></div>
+      <h3 class="era__title">The Machines Inherit a God's Power</h3>
+      <div class="era__body"><p>An Echo of the Witness seizes the <strong>Vex</strong>, leaderless after their master's fall. The long-lost Golden-Age scientist Maya Sundaresh, reborn through the Vex network as the Conductor, foresees ruin — until <button class="ref" data-c="ikora">Ikora</button> and <button class="ref" data-c="saint">Saint-14</button> break her hold over the collective.</p></div>
+    </article>
+    <article class="era reveal" style="--accent:var(--solar)">
+      <span class="era__node"></span>
+      <div class="era__tag">Episode: Revenant <span class="yr">· Fallen &amp; Scorn</span></div>
+      <h3 class="era__title">The Slayer Baron's Hunt</h3>
+      <div class="era__body"><p>A gothic, vampire-hunter chapter: the undying Fikrul raises the <strong>Scorn</strong> again and again. Alongside <button class="ref" data-c="mithrax">Mithrax</button>, his daughter <button class="ref" data-c="eido">Eido</button>, and a wavering <button class="ref" data-c="eramis">Eramis</button>, you finally put him down — and deepen humanity's bond with the Eliksni.</p></div>
+    </article>
+    <article class="era reveal" style="--accent:var(--hive)">
+      <span class="era__node"></span>
+      <div class="era__tag">Episode: Heresy <span class="yr">· Hive</span></div>
+      <h3 class="era__title">Eris Becomes the Heresiarch</h3>
+      <div class="era__body">
+        <p>Aboard the resurrected <strong>Dreadnaught</strong> — Oryx's old throne-ship — <button class="ref" data-c="eris">Eris Morn</button> claims a Throne World of her own, naming herself the <strong>Heresiarch</strong>, to confront the lingering Spirit of Oryx and the war-god <button class="ref" data-c="xivu">Xivu Arath</button>. The Echo falls, but Xivu survives, and <button class="ref" data-c="savathun">Savathûn</button> — done playing the trickster — resurfaces and swears revenge.</p>
+        <p>Quietly, the lore turns to <button class="ref" data-c="nine">the Nine</button>, whose council is fracturing in the Witness's absence. The next saga is already gathering.</p>
+      </div>
+    </article>
+  </div>
+
+  <!-- ===================== SAGA TWO ===================== -->
+  <div class="saga-head reveal" data-stage="9" style="--accent:var(--darkmatter)">
+    <div class="saga-head__kicker">Saga Two · Year 8 · "The Year of Prophecy"</div>
+    <h2 class="saga-head__title">The Fate Saga</h2>
+    <p class="saga-head__note">A new power vacuum, a new power source — <em>dark matter</em> — and a prophecy of extinction no one is allowed to hear.</p>
+  </div>
+
+  <div class="timeline" data-stage="9">
+    <article class="era reveal" id="edgeoffate" data-stage="9" style="--accent:var(--darkmatter)">
+      <span class="era__node"></span>
+      <div class="era__tag">The Edge of Fate <span class="yr">· July 2025</span> <span class="era__power">Dark matter</span></div>
+      <h3 class="era__title">Bind the Nine</h3>
+      <div class="era__body">
+        <p>A strange summons from <button class="ref" data-c="nine">the Nine</button> draws you to <strong>Kepler</strong>, a rim-world saturated with <strong>dark matter</strong> — a third cosmic force you learn to blend with Light and Dark. There, one of the Nine, <strong>Three (III)</strong>, dies, and through the time-displaced <button class="ref" data-c="lodi">Lodi</button> delivers a prophecy: <em>bind the Nine</em> to the physical plane, or Sol faces extinction.</p>
+        <p>You learn the Nine have manipulated events for ages — even engineering <button class="ref" data-c="ikora">Ikora</button>'s original death and rebirth as a Guardian. And, fearing mass panic, <button class="ref" data-c="zavala">Zavala</button> and the Vanguard <strong>bury the prophecy.</strong></p>
+      </div>
+      <div class="callout">
+        <div class="callout__label">The big twist</div>
+        <p>You — the Guardian — are hinted to be a <em>weapon of the Nine</em>, shaped for a purpose not yet revealed. The Vanguard's cover-up sets up the central conflict of everything that follows.</p>
+      </div>
+    </article>
+    <article class="era reveal" id="renegades" data-stage="10" style="--accent:var(--mars)">
+      <span class="era__node"></span>
+      <div class="era__tag">Renegades <span class="yr">· Dec 2025</span> <span class="era__power">10th &amp; final expansion</span></div>
+      <h3 class="era__title">The Drifter Goes Rogue</h3>
+      <div class="era__body">
+        <p>Furious at the cover-up, <button class="ref" data-c="drifter">the Drifter</button> breaks with the Vanguard and sets up an outlaw base in Mars' <strong>Tharsis Cantina</strong>, gathering a crew — <button class="ref" data-c="eris">Eris</button>, the Eliksni <button class="ref" data-c="eido">Eido</button>, and a by-the-book Praxic Order Guardian, Aunor. Their enemy: the <strong>Barant Imperium</strong>, a Cabal legion under Premier Lume and the corrupted dark-Guardian <button class="ref" data-c="bael">Dredgen Bael</button>, armed in secret by VI of the Nine.</p>
+        <p>Bael's superweapon would strip <em>paracausal energy</em> — the power behind Guardians and Ghosts — unmaking them entirely. You stop it and claim the <strong>Praxic Blade</strong>; the crew concludes the Nine must be bound into <strong>mortal vessels</strong>. <button class="ref" data-c="eris">Eris</button> turns her sights on seizing the Nine her own way — and the Drifter, who spent a lifetime ready to bolt, finally chooses to stay and fight beside the family he's found.</p>
+      </div>
+      <div class="callout">
+        <div class="callout__label">About those lightsabers</div>
+        <p>Renegades is an official, Lucasfilm-collaborated <em>Star Wars</em>-styled chapter — the Praxic Order as Jedi, the Praxic Blade as lightsaber. It's Destiny telling a Star Wars story with its own lore, not a crossover.</p>
+      </div>
+    </article>
+  </div>
+
+  <!-- ===================== FACTIONS ===================== -->
+  <div class="saga-head reveal" id="factions" data-stage="10" style="--accent:var(--arc)">
+    <div class="saga-head__kicker">The State of Sol</div>
+    <h2 class="saga-head__title">Factions &amp; Peoples</h2>
+    <p class="saga-head__note">Who's allied, who's hostile, and how a decade of war reshaped the system's populations.</p>
+  </div>
+  <div class="factions" data-stage="10">
+    <div class="fac reveal" style="--accent:var(--light)">
+      <div class="fac__top"><span class="fac__name">Humanity &amp; the Last City</span><span class="fac__status">Standing</span></div>
+      <p class="fac__txt">The last bastion under the Traveler — battered, scarred by the Almighty, but unbroken, and now home to refugees of more than one species.</p>
+    </div>
+    <div class="fac reveal" style="--accent:var(--arc)">
+      <div class="fac__top"><span class="fac__name">The Eliksni (Fallen)</span><span class="fac__status">Allies</span></div>
+      <p class="fac__txt">Once raiders, now partly settled in the City's Eliksni Quarter under <button class="ref" data-c="mithrax">Mithrax</button>'s House of Light — a historic reconciliation. Other Houses remain hostile.</p>
+    </div>
+    <div class="fac reveal" style="--accent:var(--mars)">
+      <div class="fac__top"><span class="fac__name">The Cabal</span><span class="fac__status">Split</span></div>
+      <p class="fac__txt">The Red Legion shattered with Ghaul. <button class="ref" data-c="caiatl">Caiatl</button>'s loyalists are allies; the Witness-loyal Shadow Legion and Mars' Barant Imperium are enemies.</p>
+    </div>
+    <div class="fac reveal" style="--accent:var(--hive)">
+      <div class="fac__top"><span class="fac__name">The Hive</span><span class="fac__status">Hostile</span></div>
+      <p class="fac__txt">Oryx and Savathûn felled (Savathûn returned); <button class="ref" data-c="xivu">Xivu Arath</button> still wages war, and the Lucent Hive wield stolen Light.</p>
+    </div>
+    <div class="fac reveal" style="--accent:var(--stasis)">
+      <div class="fac__top"><span class="fac__name">The Vex</span><span class="fac__status">Fractured</span></div>
+      <p class="fac__txt">The machine-race lost coherence after the Witness's death; rival sub-collectives now war across Sol with no single guiding mind.</p>
+    </div>
+    <div class="fac reveal" style="--accent:var(--void-p)">
+      <div class="fac__top"><span class="fac__name">The Awoken</span><span class="fac__status">Recovering</span></div>
+      <p class="fac__txt"><button class="ref" data-c="mara">Mara Sov</button>'s people, long bound to the cursed Dreaming City, are now more openly allied with the City.</p>
+    </div>
+    <div class="fac reveal" style="--accent:var(--darkmatter)">
+      <div class="fac__top"><span class="fac__name">The Nine</span><span class="fac__status">At war within</span></div>
+      <p class="fac__txt">Eldritch entities tied to the planets of Sol. With one of their number dead, they've fallen into civil war — and binding them may be the only way to stop extinction.</p>
+    </div>
+  </div>
+
+  <!-- CASUALTY BOARD -->
+  <div class="saga-head reveal" id="casualties" data-stage="10" style="--accent:var(--solar)">
+    <div class="saga-head__kicker">The State of Sol</div>
+    <h2 class="saga-head__title">The Casualty Board</h2>
+    <p class="saga-head__note">A decade of war, in names — who fell, who came back, and who's still out there.</p>
+  </div>
+  <div class="board" data-stage="10">
+    <div class="board__col" style="--accent:#d96b6b">
+      <div class="board__head"><svg class="board__icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,6 8,11 13,6"/></svg>Killed in action</div>
+      <div class="board__row"><button class="ref" data-c="cayde">Cayde-6</button><span class="board__note">Forsaken — walks again only in the Pale Heart</span></div>
+      <div class="board__row"><button class="ref" data-c="ghaul">Dominus Ghaul</button><span class="board__note">The Red War — destroyed by the waking Traveler</span></div>
+      <div class="board__row"><button class="ref" data-c="calus">Emperor Calus</button><span class="board__note">Lightfall — fell as the Witness's Disciple</span></div>
+      <div class="board__row"><button class="ref" data-c="rasputin">Rasputin</button><span class="board__note">Season of the Seraph — sacrificed himself</span></div>
+      <div class="board__row"><button class="ref" data-c="amanda">Amanda Holliday</button><span class="board__note">Season of Defiance — died defending the City</span></div>
+      <div class="board__row"><button class="ref" data-c="witness">The Witness</button><span class="board__note">The Final Shape — unmade at last</span></div>
+      <div class="board__row"><span class="board__name">Three (III)</span><span class="board__note">The Edge of Fate — a member of the Nine, dead</span></div>
+    </div>
+    <div class="board__col" style="--accent:var(--strand)">
+      <div class="board__head"><svg class="board__icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3,10 8,5 13,10"/></svg>Back from the brink</div>
+      <div class="board__row"><button class="ref" data-c="crow">The Crow</button><span class="board__note">Reborn a new man — once the killer Uldren</span></div>
+      <div class="board__row"><button class="ref" data-c="saint">Saint-14</button><span class="board__note">Pulled out of the timestream, alive again</span></div>
+      <div class="board__row"><button class="ref" data-c="savathun">Savathûn</button><span class="board__note">Killed in the Witch Queen — and back since</span></div>
+      <div class="board__row"><button class="ref" data-c="sloane">Cmdr. Sloane</button><span class="board__note">Returned from lost Titan, no longer fully human</span></div>
+    </div>
+    <div class="board__col" style="--accent:var(--void-p)">
+      <div class="board__head"><svg class="board__icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="8" r="4.5"/></svg>Still out there</div>
+      <div class="board__row"><button class="ref" data-c="xivu">Xivu Arath</button><span class="board__note">God of War — thwarted, never beaten</span></div>
+      <div class="board__row"><button class="ref" data-c="nine">The Nine</button><span class="board__note">Fracturing into civil war across Sol</span></div>
+      <div class="board__row"><button class="ref" data-c="eramis">Eramis</button><span class="board__note">Frozen, freed, and still at large</span></div>
+    </div>
+  </div>
+
+  <!-- POWERS -->
+  <div class="saga-head reveal" style="--accent:var(--light)">
+    <div class="saga-head__kicker">Reference</div>
+    <h2 class="saga-head__title">The Powers You Gained</h2>
+    <p class="saga-head__note">Your Guardian's arsenal <em>is</em> the story — each new power marks the moment the war changed.</p>
+  </div>
+  <div class="powers reveal">
+    <div class="pw"><span class="dot" style="color:var(--light)"></span><span><b>The Light</b>Arc, Solar &amp; Void — the Traveler's gift</span></div>
+    <div class="pw"><span class="dot" style="color:var(--stasis)"></span><span><b>Stasis</b>Beyond Light — Darkness as ice</span></div>
+    <div class="pw"><span class="dot" style="color:var(--strand)"></span><span><b>Strand</b>Lightfall — Darkness as threads</span></div>
+    <div class="pw"><span class="dot" style="color:var(--prism)"></span><span><b>Prismatic</b>Final Shape — Light + Dark fused</span></div>
+    <div class="pw"><span class="dot" style="color:var(--darkmatter)"></span><span><b>Dark Matter</b>Fate Saga — a third force</span></div>
+  </div>
+
+  <!-- RAIDS -->
+  <div class="saga-head reveal" id="raids" data-stage="10" style="--accent:var(--prism)">
+    <div class="saga-head__kicker">Reference</div>
+    <h2 class="saga-head__title">Raids Worth Knowing</h2>
+    <p class="saga-head__note">The biggest lore drops live inside the six-player raids. If you only learn four, learn these.</p>
+  </div>
+  <div class="raids reveal" data-stage="10">
+    <div class="raid"><div class="raid__name">Last Wish <span class="raid__src">Forsaken</span></div><p class="raid__txt">Inside the Dreaming City you confront <strong>Riven</strong>, the last Ahamkara, and trigger the three-week curse — the wish that quietly bends everything that follows.</p></div>
+    <div class="raid"><div class="raid__name">Vow of the Disciple <span class="raid__src">Witch Queen</span></div><p class="raid__txt">You face <strong>Rhulk</strong>, the Witness's <em>first</em> Disciple, and learn how the Witness has uplifted and then butchered species across the eons.</p></div>
+    <div class="raid"><div class="raid__name">Root of Nightmares <span class="raid__src">Lightfall</span></div><p class="raid__txt">A fight against <strong>Nezarec</strong>, the Final God of Pain — a Disciple who led the Black Fleet's very first invasion of our system during the Collapse.</p></div>
+    <div class="raid"><div class="raid__name">Salvation's Edge <span class="raid__src">The Final Shape</span></div><p class="raid__txt">The assault inside the Pale Heart that ends the <button class="ref" data-c="witness">Witness</button> — the climax of the whole ten-year saga.</p></div>
+  </div>
+
+  <!-- STATE NOW -->
+  <div class="saga-head reveal" data-stage="10" style="--accent:var(--light)">
+    <div class="saga-head__kicker">Right Now</div>
+    <h2 class="saga-head__title">Where Things Stand</h2>
+    <p class="saga-head__note">The short version, if you're booting up today.</p>
+  </div>
+  <div class="statenow reveal" data-stage="10">
+    <p>The <strong>Witness is dead</strong> and the ten-year war is won — but its absence cracked the cosmic order. The <strong>Nine</strong> are unravelling, one of them is dead, and a buried prophecy says they must be <strong>bound to mortal flesh</strong> or the whole system dies.</p>
+    <p>The <strong>Vanguard is divided</strong> by its own cover-up. <button class="ref" data-c="eris">Eris</button> has set out to end the Hive pantheon for good — hunting her surviving "sisters," <button class="ref" data-c="savathun">Savathûn</button> and <button class="ref" data-c="xivu">Xivu Arath</button>, who are both still scheming and rebuilding. You, meanwhile, may be a weapon the Nine built long ago. And <button class="ref" data-c="drifter">the Drifter</button> — who spent a lifetime keeping one foot out the door — finally stopped running, choosing to stay and fight beside the family he found.</p>
+    <p>The system itself has changed: <strong>Titan is back</strong>, the Eliksni live among us, the Cabal are half-friend and half-foe, and humanity's circle of allies is wider than ever. And after years adrift, the <strong>Traveler has returned to hover over the Last City</strong> — steadying an Earth that had begun to die when Three of the Nine fell.</p>
+  </div>
+
+  <!-- EPILOGUE -->
+  <section class="epilogue reveal" id="monument">
+    <div class="saga-head__kicker">The Final Update · June 9, 2026</div>
+    <h2>Monument of Triumph</h2>
+    <p>Less a new chapter than a memorial — a living museum in the Tower honouring everything Guardians have done: gods felled, blades shattered, Nightmares banished, a Witch Queen out-played at her own game.</p>
+    <p>Active development winds down here, and the live-service machinery stops. But the servers stay on, the Sol system stays open, and the whole ten-year legend remains yours to walk through, raid by raid, whenever you return.</p>
+  </section>
+
+  <div class="endings reveal" data-stage="10">
+    <div class="endings__head">The true last word · two hidden cutscenes</div>
+    <p class="endings__intro">Bungie buried the real finale behind a checklist of Triumphs, so it's easy to miss. There are <strong>two secret ending cinematics</strong> — one a heartfelt goodbye, one a tease of what would have come next. They're worth unlocking yourself, but if you'd rather just know, tap to reveal.</p>
+    <details class="spoiler">
+      <summary>Reveal Ending 1 — the farewell <span class="spoiler__tag">spoiler</span></summary>
+      <p><button class="ref" data-c="zavala">Zavala</button> reflects on his long road, then steps down — handing the title of Vanguard Commander to <button class="ref" data-c="ikora">Ikora Rey</button>. A quiet, earned send-off for the people who held the City together.</p>
+    </details>
+    <details class="spoiler">
+      <summary>Reveal Ending 2 — the cliffhanger <span class="spoiler__tag">spoiler</span></summary>
+      <p>An "Unknown Voice" — widely believed to be the <strong>Winnower</strong>, the primal Darkness itself — speaks through Lodi. It tells you to rest and enjoy beating the Witness, but to "stay hungry," hints the Nine only need Guardians because <em>it</em> exists, and promises an inevitable, far greater conflict, closing with: roughly, <em>don't worry — when it's over, I won't leave you behind.</em> With no Destiny 3 in development, it's a thread that may never be pulled.</p>
+    </details>
+  </div>
+
+  <!-- RETURNING CHECKLIST -->
+  <div class="saga-head reveal" id="returning" style="--accent:var(--light)">
+    <div class="saga-head__kicker">Optional · For When You Log In</div>
+    <h2 class="saga-head__title">The Returning Guardian's Checklist</h2>
+    <p class="saga-head__note">Coming back cold is overwhelming. Here's the short path through it.</p>
+  </div>
+  <div class="checklist reveal">
+    <ul>
+      <li><b>Grab your welcome-back loot.</b> Logging in drops 2 Bright Engrams, 50 Legendary Marks and an emblem; long-time accounts also get the "Old Lights" emblem and an emote.</li>
+      <li><b>Don't panic about your Power.</b> Everyone resets to 10 (cap is 550). Visit <button class="ref" data-c="ikora">Ikora</button> in the Tower for a free <strong>New Light Kit</strong> that jumps you straight to 300.</li>
+      <li><b>If you're rusty on the basics,</b> go to the Cosmodrome and run the <strong>New Light</strong> quest from Shaw Han — a quick refresher on movement, abilities and the Director.</li>
+      <li><b>Start the send-off.</b> In the Tower courtyard, interact with the <strong>Monument</strong> in the centre to begin its onramp quest.</li>
+      <li><b>Learn the one loop that matters now:</b> complete <strong>Triumphs</strong> from anywhere in the game's history → earn <strong>Legendary Marks</strong> → spend them at the four Tenet vendors in the courtyard (Bravery, Devotion, Sacrifice, Death). Marks never expire, so there's no rush.</li>
+      <li><b>Level up by playing <em>Ops</em>.</b> Fireteam Ops carries you ~300→450; Solo Ops (or higher difficulty grades) takes you toward 550.</li>
+      <li><b>Never solo-queue a raid.</b> Use the in-game <strong>Fireteam Finder</strong> (from the roster screen) to group up — every campaign, raid and dungeon is now free to all.</li>
+      <li><b>New permanent things to try:</b> <strong>Sparrow Racing</strong> is back, and <strong>Pantheon</strong> offers a rotating boss gauntlet for raiders.</li>
+      <li><b>Before you finish:</b> chase the two hidden ending cutscenes above — they're the actual conclusion of the story.</li>
+    </ul>
+  </div>
+
+  <footer>
+    <span class="em">Eyes up, Guardian.</span><br>
+    A catch-up companion for the Monument of Triumph · Light · Dark · Fate
+    <div class="footer__note">An unofficial, non-commercial fan project made by <strong>CloudchaserXI</strong> · not affiliated with or endorsed by Bungie. Destiny, and all characters, names and lore are &copy; Bungie, Inc. Created for free for fellow Guardians.</div>
+  </footer>
+</div>
+
+<!-- BACK TO TOP -->
+<button class="totop" id="totop" aria-label="Back to top" title="Back to top">↑</button>
+
+<!-- CODEX DRAWER -->
+<button class="codexbtn" id="codexBtn" aria-label="Open the codex index">
+  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2.5h7a1.5 1.5 0 0 1 1.5 1.5v9.5H4.5A1.5 1.5 0 0 1 3 12V2.5z"/><path d="M11.5 4H13v9.5H4.5"/><path d="M5 5.5h4M5 8h4"/></svg>
+  Codex
+</button>
+<div class="cdx-backdrop" id="cdxBackdrop"></div>
+<aside class="cdx" id="cdx" aria-label="Codex index" aria-hidden="true">
+  <div class="cdx__head">
+    <div class="cdx__titlerow"><span class="cdx__title">Codex</span><button class="cdx__close" id="cdxClose" aria-label="Close codex">&times;</button></div>
+    <div class="cdx__sub">Terms, factions &amp; who's who — searchable, and it follows your spoiler guard.</div>
+    <input class="cdx__search" id="cdxSearch" type="search" placeholder="Search a term, faction or name…" autocomplete="off">
+    <div class="cdx__guardnote" id="cdxGuardNote" style="display:none"></div>
+  </div>
+  <div class="cdx__body" id="cdxBody"></div>
+</aside>
+
+<!-- POPOVER -->
+<div class="pop" id="pop" role="dialog" aria-label="Character profile">
+  <div class="pop__bar" id="popBar"></div>
+  <div class="pop__in">
+    <div class="pop__role" id="popRole"></div>
+    <div class="pop__name" id="popName"></div>
+    <div class="pop__meta" id="popMeta"></div>
+    <p class="pop__arc" id="popArc"></p>
+  </div>
+</div>
+
+<script>
+const CHARS = {
+  zavala:{s:9,n:"Commander Zavala",r:"Titan Vanguard",aff:"The Vanguard",st:"Active",c:"var(--arc)",
+    a:"The Last City's steadfast military leader. His faith breaks and reforges across the saga; in the Fate era he makes his first morally grey choice — burying the Nine's extinction prophecy to prevent panic."},
+  ikora:{s:9,n:"Ikora Rey",r:"Warlock Vanguard",aff:"The Vanguard",st:"Active",c:"var(--void-p)",
+    a:"Scholar and quiet power of the Vanguard. The Edge of Fate reveals the Nine engineered her original human death — and her rebirth as a Guardian — for reasons still unfolding."},
+  cayde:{s:7,n:"Cayde-6",r:"Hunter Vanguard · Exo",aff:"The Vanguard",st:"Killed → walks again",c:"var(--solar)",
+    a:"The beloved wisecracker whose murder by Uldren in Forsaken hardened the whole series. He walks beside you again, briefly, inside the Pale Heart during the Final Shape."},
+  crow:{s:7,n:"The Crow (Uldren Sov)",r:"Hunter Vanguard · former Awoken prince",aff:"Awoken / Vanguard",st:"Active",c:"var(--void-p)",
+    a:"As Uldren, he murdered Cayde-6. Resurrected with no memory as the Crow, he climbs from outcast to — after the Final Shape — the new Hunter Vanguard, filling Cayde's empty seat, even if not every Hunter has accepted him. Destiny's clearest case that a past life doesn't define who you become."},
+  eris:{s:10,n:"Eris Morn",r:"Hidden · Hive-touched",aff:"The Hidden / herself",st:"Active · Heresiarch",c:"var(--hive)",
+    a:"Sole survivor of a massacre beneath the Moon, she returns as humanity's expert on the Darkness, bargains with Savathûn's power, and by Heresy crowns herself a Hive sovereign with her own Throne World. She ends Renegades set on one last task: finishing the Hive pantheon for good by hunting her surviving 'sisters,' Xivu Arath and Savathûn."},
+  drifter:{s:10,n:"The Drifter",r:"Lightbearer · 'Dredgen Hope'",aff:"Independent → his crew",st:"Active · settled",c:"var(--mars)",
+    a:"Smuggler and creator of Gambit, long the series' moral wildcard who swore attachment would get you killed. He breaks from the Vanguard over the prophecy cover-up and goes outlaw on Mars — but his story lands somewhere unexpected: he finally stops running, choosing the found family he built (and a closeness with Eris) over his endless exit strategy."},
+  savathun:{s:8,n:"Savathûn, the Witch Queen",r:"Hive God of cunning",aff:"The Hive",st:"Killed → returned",c:"var(--hive)",
+    a:"Master manipulator behind the Dreaming City curse, and the wielder of stolen Light. Killed in the Witch Queen, returned in Heresy — and now openly your enemy, done pretending to be a friend."},
+  xivu:{s:4,n:"Xivu Arath, God of War",r:"Hive God",aff:"The Hive",st:"At large",c:"var(--hive)",
+    a:"Savathûn's sister, who grows stronger with every war fought in her name. Repeatedly thwarted but never put down — still out there, gathering strength."},
+  mara:{s:10,n:"Mara Sov",r:"Queen of the Awoken",aff:"The Awoken / Reef",st:"Active",c:"var(--void-p)",
+    a:"Enigmatic ruler of the Reef and the Dreaming City, playing a long, patient game across the fate of the Awoken. By the end, the Nine dangle the one thing she wants — her long-lost love, Sjur Eido, revealed to be alive but lost in time — if only she'll abandon the Last City. She refuses the bargain and keeps searching on her own terms."},
+  mithrax:{s:4,n:"Mithrax, Kell of Light",r:"Eliksni (Fallen) leader",aff:"House of Light",st:"Active · ally",c:"var(--arc)",
+    a:"Leads the Fallen who allied with humanity. Under him the Eliksni are granted sanctuary inside the Last City — the first time the two peoples have ever lived side by side."},
+  eido:{s:9,n:"Eido",r:"Eliksni scribe",aff:"House of Light",st:"Active · ally",c:"var(--arc)",
+    a:"Mithrax's adopted daughter, raised in the Last City — curious, principled, and a living bridge between humanity and the Eliksni. Part of the Drifter's outlaw crew, and by the end reconnecting with her father after time apart."},
+  caiatl:{s:5,n:"Empress Caiatl",r:"Leader of the Cabal",aff:"Cabal",st:"Active · ally",c:"var(--mars)",
+    a:"Daughter of Emperor Calus. Arrives demanding humanity submit, then becomes a wary ally against the Witness — helping anchor the grand coalition."},
+  calus:{s:6,n:"Emperor Calus",r:"Exiled Cabal emperor",aff:"Cabal → the Witness",st:"Killed",c:"var(--prism)",
+    a:"Hedonist ex-emperor who turns zealot and becomes the Witness's newest Disciple. Dies in its service on Neptune during Lightfall."},
+  osiris:{s:9,n:"Osiris",r:"Legendary Warlock · now mortal",aff:"The Vanguard (formerly)",st:"Active · mortal",c:"var(--solar)",
+    a:"Vex-obsessed sage and former Vanguard Commander. He loses his Ghost, Sagira — and with her his Light, leaving him mortal — and is secretly impersonated by Savathûn for nearly a year before the deception is exposed. Now quietly ageing toward an ordinary death, he's recording farewell messages for his partner, Saint-14."},
+  saint:{s:3,n:"Saint-14",r:"Legendary Titan · Exo",aff:"The Vanguard",st:"Active · rescued",c:"var(--solar)",
+    a:"A hero long thought lost in the Infinite Forest. You and Osiris pull him back out of the timestream, returning a living legend to the Tower."},
+  rasputin:{s:5,n:"Rasputin",r:"Warmind · Golden-Age AI",aff:"Humanity",st:"Destroyed (sacrifice)",c:"var(--arc)",
+    a:"Humanity's ancient automated defender. Restored, then sacrifices himself to deny his vast power to Xivu Arath and the Witness."},
+  elsie:{s:4,n:"Elsie Bray / the Exo Stranger",r:"Time-traveller",aff:"Independent",st:"Active",c:"var(--stasis)",
+    a:"A Guardian from a doomed future who returns again and again to steer the timeline away from the Witness's victory. She teaches you Stasis on Europa."},
+  amanda:{s:6,n:"Amanda Holliday",r:"Tower shipwright · Hunter",aff:"The Last City",st:"Killed",c:"var(--void-p)",
+    a:"The Tower's warm, grease-stained heart. Dies heroically during the Shadow Legion's assault on the Last City in the run-up to the Final Shape."},
+  sloane:{s:6,n:"Commander Sloane",r:"Titan · Vanguard officer",aff:"The Vanguard",st:"Active · transformed",c:"var(--stasis)",
+    a:"Stationed on Titan and lost when the planet vanished. Returns bonded to Ahsa, an ancient deep-sea leviathan touched by Darkness — part human, part something else."},
+  eramis:{s:4,n:"Eramis, Kell of Darkness",r:"Eliksni warlord",aff:"House Salvation",st:"At large",c:"var(--stasis)",
+    a:"The Fallen leader who first weaponised Stasis on Europa. Frozen, freed, and recurring as a tragic, defiant antagonist who occasionally edges toward the light."},
+  ghaul:{s:1,n:"Dominus Ghaul",r:"Cabal Red Legion commander",aff:"Red Legion",st:"Killed",c:"var(--solar)",
+    a:"The conqueror who caged the Traveler and stripped every Guardian of the Light. Destroyed when the Traveler finally woke — the blast that signalled the Darkness to come."},
+  witness:{s:7,n:"The Witness",r:"The hand of the Darkness",aff:"The Black Fleet",st:"Destroyed",c:"var(--prism)",
+    a:"The singular mind behind every Pyramid and the original Collapse. Sought to freeze all of reality into one perfect, unchanging 'final shape.' Its death cracked the cosmic order open."},
+  nine:{s:9,n:"The Nine",r:"Eldritch entities",aff:"Tied to the planets of Sol",st:"Fracturing",c:"var(--darkmatter)",
+    a:"Beings that watch from the dark margins of the system. With one of their number (Three) now dead, they've fallen into civil war — and binding them may be the only way to stop universal extinction."},
+  bael:{s:10,n:"Dredgen Bael",r:"Corrupted Lightbearer",aff:"Barant Imperium / the Nine",st:"Discarded",c:"var(--mars)",
+    a:"A human Lightbearer remade and inflamed by VI of the Nine to lead the Cabal's Barant Imperium, wielding a weapon built to strip Guardians of their power. Once he's beaten, VI simply abandons him — and, robbed of the paracausal force holding him together, he's left a hollow, dying man. A genuinely tragic end."},
+  lodi:{s:9,n:"Lodi",r:"Emissary of the Nine",aff:"The Nine",st:"Active · unstuck in time",c:"var(--darkmatter)",
+    a:"A man pulled out of his own time onto Kepler and chosen as the Nine's new mortal voice, carrying their extinction prophecy. Experiencing time non-linearly, he becomes something far stranger and older than human — bent on saving his lost family from the end of all things."}
+};
+
+(function(){
+  const pop = document.getElementById('pop');
+  const elRole = document.getElementById('popRole'), elName = document.getElementById('popName'),
+        elMeta = document.getElementById('popMeta'), elArc = document.getElementById('popArc'),
+        elBar = document.getElementById('popBar');
+  let pinned = null, hideTimer = null, current = null;
+
+  function fill(d){
+    elBar.style.background = d.c; pop.style.setProperty('--pc', d.c);
+    elRole.textContent = d.r; elName.textContent = d.n; elArc.textContent = d.a;
+    elMeta.innerHTML = '';
+    const aff = document.createElement('span'); aff.className='pop__chip'; aff.textContent=d.aff; elMeta.appendChild(aff);
+    const st = document.createElement('span'); st.className='pop__chip status'; st.textContent=d.st; elMeta.appendChild(st);
+  }
+  function fillGated(d){
+    elBar.style.background = 'var(--text-faint)'; pop.style.setProperty('--pc','var(--text-faint)');
+    elRole.textContent = 'Spoiler guard'; elName.textContent = d.n;
+    elArc.textContent = 'Hidden to avoid spoilers — this profile sits past the point you\u2019ve set. Raise the spoiler guard to reveal it.';
+    elMeta.innerHTML = '';
+    const chip = document.createElement('span'); chip.className='pop__chip'; chip.textContent='\uD83D\uDD12 hidden'; elMeta.appendChild(chip);
+  }
+  function place(el){
+    const r = el.getBoundingClientRect();
+    pop.style.left='0px'; pop.style.top='0px';
+    pop.classList.add('show');
+    const pw = pop.offsetWidth, ph = pop.offsetHeight;
+    let left = window.scrollX + r.left;
+    left = Math.min(left, window.scrollX + document.documentElement.clientWidth - pw - 12);
+    left = Math.max(left, window.scrollX + 12);
+    let top = window.scrollY + r.bottom + 9;
+    if (r.bottom + 9 + ph > window.innerHeight && r.top - 9 - ph > 0){
+      top = window.scrollY + r.top - ph - 9;
+    }
+    pop.style.left = left+'px'; pop.style.top = top+'px';
+  }
+  function show(el){
+    const d = CHARS[el.dataset.c]; if(!d) return;
+    clearTimeout(hideTimer); current = el;
+    if((d.s||1) > (window.spoilerStage||10)) fillGated(d); else fill(d);
+    place(el);
+  }
+  function hide(){ pop.classList.remove('show'); current=null; }
+  function scheduleHide(){ clearTimeout(hideTimer); hideTimer=setTimeout(()=>{ if(!pinned) hide(); },140); }
+
+  document.querySelectorAll('.ref').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{ if(!pinned) show(el); });
+    el.addEventListener('mouseleave',()=>{ if(!pinned) scheduleHide(); });
+    el.addEventListener('focus',()=>{ if(!pinned) show(el); });
+    el.addEventListener('blur',()=>{ if(!pinned) scheduleHide(); });
+    el.addEventListener('click',(e)=>{
+      e.preventDefault(); e.stopPropagation();
+      if(pinned===el){ pinned=null; hide(); }
+      else { pinned=el; show(el); }
+    });
+  });
+  pop.addEventListener('mouseenter',()=>clearTimeout(hideTimer));
+  pop.addEventListener('mouseleave',()=>{ if(!pinned) scheduleHide(); });
+  document.addEventListener('click',(e)=>{
+    if(pinned && !pop.contains(e.target) && !e.target.classList.contains('ref')){ pinned=null; hide(); }
+  });
+  document.addEventListener('keydown',(e)=>{ if(e.key==='Escape'){ pinned=null; hide(); } });
+  window.addEventListener('scroll',()=>{ if(current && !pinned) hide(); },{passive:true});
+})();
+
+// reveal + progress
+(function(){
+  const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!reduce){
+    const io = new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:0.12,rootMargin:'0px 0px -8% 0px'});
+    document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  }
+  const bar = document.getElementById('progress');
+  const totop = document.getElementById('totop');
+  totop.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+  window.addEventListener('scroll',()=>{
+    const h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h>0 ? (window.scrollY/h*100) : 0) + '%';
+    totop.classList.toggle('show', window.scrollY > window.innerHeight);
+  },{passive:true});
+
+  // spoiler guard
+  window.spoilerStage = 10;
+  const guard = document.getElementById('spoilerGuard');
+  const note = document.getElementById('guardNote');
+  const staged = Array.from(document.querySelectorAll('[data-stage]'));
+  const labels = {1:'the Red War',2:'Forsaken',3:'Shadowkeep',4:'Beyond Light',5:'the Witch Queen',6:'Lightfall',7:'the Final Shape',8:'the Episodes',9:'the Edge of Fate',10:'Renegades'};
+  if(guard){
+    guard.addEventListener('change',()=>{
+      const s = parseInt(guard.value,10);
+      window.spoilerStage = s;
+      staged.forEach(el=>{ el.style.display = (parseInt(el.dataset.stage,10) > s) ? 'none' : ''; });
+      note.textContent = s < 10 ? '· hiding everything after '+labels[s] : '';
+      document.dispatchEvent(new CustomEvent('spoilerchange',{detail:s}));
+    });
+  }
+})();
+
+// codex drawer
+(function(){
+  const TERMS = [
+    {s:1, t:"The Light / The Darkness", d:"Not good vs evil — two opposed cosmic forces. The Light favours connection and growth (the 'Gardener'); the Darkness favours a single final answer (the 'Winnower')."},
+    {s:1, t:"Paracausal", d:"'Space magic' that breaks normal cause and effect — the power behind the Light, the Darkness, Ghosts and Guardians."},
+    {s:1, t:"Ghost / Lightbearer", d:"A Ghost is a small companion that resurrects and sustains a Guardian; a Lightbearer is anyone a Ghost has raised."},
+    {s:1, t:"The Collapse", d:"The catastrophe when the Darkness first drove off the Traveler, ending humanity's Golden Age and nearly wiping us out."},
+    {s:1, t:"The Vanguard", d:"The Last City's command — traditionally a Titan, a Warlock and a Hunter leading the Guardians."},
+    {s:1, t:"Xûr", d:"The Agent of the Nine — the cryptic weekend merchant who sells Exotics, and the Nine's hand reaching into the City."},
+    {s:2, t:"Ahamkara", d:"Wish-granting dragons whose bargains always cost more than you expect. Riven was the last of them."},
+    {s:2, t:"Dredgen", d:"A Guardian who walks the dark path of the old villain Dredgen Yor — the Drifter once did, as 'Dredgen Hope'."},
+    {s:3, t:"The Sword Logic", d:"The Hive's creed: existence belongs to whatever proves strongest by killing. It's why they wage endless war — survival is their religion."},
+    {s:3, t:"Oryx", d:"The Hive's god-king, father of Savathûn and Xivu Arath, slain by Guardians before Destiny 2 — his throne-ship the Dreadnaught still looms."},
+    {s:3, t:"Worm Gods", d:"Ancient parasites that gave the Hive immortality and power in exchange for endless killing — the source of the Sword Logic."},
+    {s:3, t:"The Pyramids / Black Fleet", d:"The Darkness's fleet of black, pyramid-shaped ships, commanded by the Witness."},
+    {s:4, t:"Eliksni", d:"The Fallen's name for themselves. The House of Light, under Mithrax, are the ones allied with humanity."},
+    {s:5, t:"Throne World", d:"A pocket reality a powerful being shapes to its own rules, where it's nearly impossible to truly kill — Savathûn's is the one you storm in the Witch Queen."},
+    {s:6, t:"Disciple", d:"A champion the Witness empowered with a sliver of its will. Rhulk was the first; Nezarec another; Calus the newest."},
+    {s:6, t:"The Veil", d:"A dark counterpart to the Traveler found on Neptune; the Witness used it to wound the Traveler and open the way into the Pale Heart."},
+    {s:8, t:"Echo", d:"A fragment of the Witness's leftover power, still warping its old servants after its death — the throughline of the Year 7 Episodes."}
+  ];
+  const FACTIONS = [
+    {s:1, t:"Humanity & the Last City", tag:"Standing", d:"The last bastion of humanity under the Traveler \u2014 battered but unbroken."},
+    {s:4, t:"The Eliksni (Fallen)", tag:"Allies", d:"Once raiders; the House of Light now lives in the City's Eliksni Quarter under Mithrax. Other Houses remain hostile."},
+    {s:7, t:"The Cabal", tag:"Split", d:"Caiatl's loyalists are allies; the Witness-loyal Shadow Legion are enemies."},
+    {s:8, t:"The Hive", tag:"Hostile", d:"Oryx and Savath\u00fbn felled (Savath\u00fbn returned); Xivu Arath still wages war, and the Lucent Hive wield stolen Light."},
+    {s:7, t:"The Vex", tag:"Fractured", d:"The machine-race lost coherence after the Witness's death; rival sub-collectives war across Sol with no single mind."},
+    {s:6, t:"The Awoken", tag:"Recovering", d:"Mara Sov's people, long bound to the cursed Dreaming City, now more openly allied with the City."},
+    {s:9, t:"The Nine", tag:"At war within", d:"Eldritch entities tied to the planets of Sol. With one of their number dead, they've fallen into civil war."}
+  ];
+
+  const body = document.getElementById('cdxBody');
+  const sortKey = s => s.replace(/^The\s+/i,'').toLowerCase();
+
+  function group(title, accent, items){
+    const g = document.createElement('div'); g.className='cdx__group';
+    const h = document.createElement('div'); h.className='cdx__sec'; h.style.color=accent; h.textContent=title; g.appendChild(h);
+    items.forEach(it=>{
+      const w = document.createElement('div'); w.className='cdx__item';
+      const top = document.createElement('div');
+      const term = document.createElement('span'); term.className='cdx__term'; term.textContent=it.t; top.appendChild(term);
+      if(it.tag){ const tg=document.createElement('span'); tg.className='cdx__tag'; tg.textContent=it.tag; top.appendChild(tg); }
+      const def = document.createElement('div'); def.className='cdx__def'; def.textContent=it.d;
+      w.appendChild(top); w.appendChild(def);
+      w.dataset.search = (it.t+' '+(it.tag||'')+' '+it.d).toLowerCase();
+      w.dataset.stage = it.s || 1;
+      g.appendChild(w);
+    });
+    return g;
+  }
+
+  const termItems = TERMS.slice().sort((a,b)=>sortKey(a.t).localeCompare(sortKey(b.t)));
+  const charItems = Object.values(CHARS)
+    .map(c=>({t:c.n, tag:c.r+' \u00b7 '+c.st, d:c.a, s:c.s}))
+    .sort((a,b)=>sortKey(a.t).localeCompare(sortKey(b.t)));
+
+  body.appendChild(group('Terms', 'var(--light)', termItems));
+  body.appendChild(group('Factions & Peoples', 'var(--arc)', FACTIONS));
+  body.appendChild(group("Who's who", 'var(--void-p)', charItems));
+  const empty = document.createElement('div'); empty.className='cdx__empty'; empty.textContent='No matches.'; empty.style.display='none';
+  body.appendChild(empty);
+
+  const search = document.getElementById('cdxSearch');
+  const gnote = document.getElementById('cdxGuardNote');
+  const stageLabels = {1:'the Red War',2:'Forsaken',3:'Shadowkeep',4:'Beyond Light',5:'the Witch Queen',6:'Lightfall',7:'the Final Shape',8:'the Episodes',9:'the Edge of Fate',10:'Renegades'};
+  function render(){
+    const stage = window.spoilerStage || 10;
+    const q = search.value.trim().toLowerCase();
+    let anyGlobal = false;
+    body.querySelectorAll('.cdx__group').forEach(g=>{
+      let any = false;
+      g.querySelectorAll('.cdx__item').forEach(it=>{
+        const okStage = parseInt(it.dataset.stage,10) <= stage;
+        const okSearch = !q || it.dataset.search.includes(q);
+        const show = okStage && okSearch;
+        it.style.display = show ? '' : 'none'; if(show) any = true;
+      });
+      g.style.display = any ? '' : 'none'; if(any) anyGlobal = true;
+    });
+    empty.style.display = anyGlobal ? 'none' : '';
+    if(gnote){
+      if(stage < 10){ gnote.style.display=''; gnote.textContent = 'Spoiler guard on — only what you\u2019ve reached through '+stageLabels[stage]+' is shown.'; }
+      else gnote.style.display='none';
+    }
+  }
+  search.addEventListener('input', render);
+  document.addEventListener('spoilerchange', render);
+  render();
+
+  const cdx = document.getElementById('cdx');
+  const backdrop = document.getElementById('cdxBackdrop');
+  const openBtn = document.getElementById('codexBtn');
+  const closeBtn = document.getElementById('cdxClose');
+  function open(){ cdx.classList.add('open'); backdrop.classList.add('open'); cdx.setAttribute('aria-hidden','false');
+    document.body.style.overflow='hidden'; render(); setTimeout(()=>search.focus(),120); }
+  function close(){ cdx.classList.remove('open'); backdrop.classList.remove('open'); cdx.setAttribute('aria-hidden','true');
+    document.body.style.overflow=''; }
+  openBtn.addEventListener('click', open);
+  const navLink = document.getElementById('codexNavLink');
+  if(navLink) navLink.addEventListener('click', e=>{ e.preventDefault(); open(); });
+  closeBtn.addEventListener('click', close);
+  backdrop.addEventListener('click', close);
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape' && cdx.classList.contains('open')) close(); });
+})();
+</script>
+</body>
+</html>
