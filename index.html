@@ -447,18 +447,19 @@
     </div>
     <div class="qm-meta">≈ 20-minute read · spoiler-safe (the endings stay hidden until you choose) · current as of Monument of Triumph, June 2026</div>
     <div class="qm-guard">
-      <label for="spoilerGuard">Spoiler guard, I've played up to:</label>
+      <label for="spoilerGuard">Spoiler guard, hide:</label>
       <select id="spoilerGuard">
-        <option value="10" selected>Everything (through Renegades)</option>
-        <option value="1">The Red War</option>
-        <option value="2">Forsaken</option>
-        <option value="3">Shadowkeep</option>
-        <option value="4">Beyond Light</option>
-        <option value="5">The Witch Queen</option>
-        <option value="6">Lightfall</option>
-        <option value="7">The Final Shape</option>
-        <option value="8">The Echoes (Episodes)</option>
-        <option value="9">The Edge of Fate</option>
+        <option value="99" selected>Nothing, I'm caught up</option>
+        <option value="1">The Red War onward</option>
+        <option value="2">Forsaken onward</option>
+        <option value="3">Shadowkeep onward</option>
+        <option value="4">Beyond Light onward</option>
+        <option value="5">The Witch Queen onward</option>
+        <option value="6">Lightfall onward</option>
+        <option value="7">The Final Shape onward</option>
+        <option value="8">The Echoes onward</option>
+        <option value="9">The Edge of Fate onward</option>
+        <option value="10">Renegades</option>
       </select>
       <span class="qm-guard__note" id="guardNote"></span>
     </div>
@@ -1020,7 +1021,7 @@ const CHARS = {
   function show(el){
     const d = CHARS[el.dataset.c]; if(!d) return;
     clearTimeout(hideTimer); current = el;
-    if((d.s||1) > (window.spoilerStage||10)) fillGated(d); else fill(d);
+    if((d.s||1) >= (window.spoilerStage||99)) fillGated(d); else fill(d);
     place(el);
   }
   function hide(){ pop.classList.remove('show'); current=null; }
@@ -1063,7 +1064,7 @@ const CHARS = {
   },{passive:true});
 
   // spoiler guard
-  window.spoilerStage = 10;
+  window.spoilerStage = 99;
   const guard = document.getElementById('spoilerGuard');
   const note = document.getElementById('guardNote');
   const staged = Array.from(document.querySelectorAll('[data-stage]'));
@@ -1072,8 +1073,8 @@ const CHARS = {
     guard.addEventListener('change',()=>{
       const s = parseInt(guard.value,10);
       window.spoilerStage = s;
-      staged.forEach(el=>{ el.style.display = (parseInt(el.dataset.stage,10) > s) ? 'none' : ''; });
-      note.textContent = s < 10 ? '· hiding everything after '+labels[s] : '';
+      staged.forEach(el=>{ el.style.display = (parseInt(el.dataset.stage,10) >= s) ? 'none' : ''; });
+      note.textContent = s <= 10 ? '· hiding '+labels[s]+' onward' : '';
       document.dispatchEvent(new CustomEvent('spoilerchange',{detail:s}));
     });
   }
@@ -1146,13 +1147,13 @@ const CHARS = {
   const gnote = document.getElementById('cdxGuardNote');
   const stageLabels = {1:'the Red War',2:'Forsaken',3:'Shadowkeep',4:'Beyond Light',5:'the Witch Queen',6:'Lightfall',7:'the Final Shape',8:'the Episodes',9:'the Edge of Fate',10:'Renegades'};
   function render(){
-    const stage = window.spoilerStage || 10;
+    const stage = window.spoilerStage || 99;
     const q = search.value.trim().toLowerCase();
     let anyGlobal = false;
     body.querySelectorAll('.cdx__group').forEach(g=>{
       let any = false;
       g.querySelectorAll('.cdx__item').forEach(it=>{
-        const okStage = parseInt(it.dataset.stage,10) <= stage;
+        const okStage = parseInt(it.dataset.stage,10) < stage;
         const okSearch = !q || it.dataset.search.includes(q);
         const show = okStage && okSearch;
         it.style.display = show ? '' : 'none'; if(show) any = true;
@@ -1161,7 +1162,7 @@ const CHARS = {
     });
     empty.style.display = anyGlobal ? 'none' : '';
     if(gnote){
-      if(stage < 10){ gnote.style.display=''; gnote.textContent = 'Spoiler guard on, only what you\u2019ve reached through '+stageLabels[stage]+' is shown.'; }
+      if(stage <= 10){ gnote.style.display=''; gnote.textContent = 'Spoiler guard on, hiding '+stageLabels[stage]+' onward.'; }
       else gnote.style.display='none';
     }
   }
